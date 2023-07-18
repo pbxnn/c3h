@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+option go_package = "c3h/api/platform;";
+
+service IndustrialData {
+  rpc GetControllerData (GetControllerDataRequest) returns (GetControllerDataReply) {
+    option (google.api.http) = {
+      get: "/c3h/industrial/controller"
+    };
+  }
+  rpc GetAllData(GetAllDataRequest) returns (GetAllDataReply) {
+    option (google.api.http) = {
+      get: "/c3h/industrial/all"
+    };
+  }
+}
+
+message GetControllerDataRequest {
+
+}
+
+message GetControllerDataReply{
+  string controller_mode      = 1;
+  string switch_status        = 2;
+  string communication_status = 3;
+}
+
+message GetAllDataRequest {}
+message GetAllDataReply {}
+

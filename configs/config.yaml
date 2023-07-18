@@ -1,0 +1,35 @@
+name: c3h
+version: 1.0
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+data:
+  database:
+    driver: mysql
+    source: zxn:pbzxn@tcp(127.0.0.1:3306)/c3h
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+  industrial_api:
+    addr: ""
+  user_api:
+    addr: ""
+log:
+  level: info
+  filename: /tmp/c3h/c3h.log
+  rotate_time: 86400s
+  max_age: 259200s
+auth:
+  model: "/Users/zhangxiaoning/Documents/code/go/buct/c3h/kratos_c3h/configs/auth/auth_model.conf"
+  policy:
+    driver: mysql
+    datasource: zxn:pbzxn@tcp(127.0.0.1:3306)/c3h
+  autoload: true
+  autoload_interval: 60s
+  white_header: test_user
+  white_map:
+    zxn: {}
+
+

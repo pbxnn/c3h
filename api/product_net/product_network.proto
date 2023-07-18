@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package api.product_net;
+
+import "google/api/annotations.proto";
+
+option go_package = "c3h/api/product_net;product_net";
+option java_multiple_files = true;
+option java_package = "api.product_net";
+
+service ProductNet {
+
+  rpc GetSwitchInfo (SwitchRequest) returns (SwitchReply) {
+    option (google.api.http) = {
+      get: "/c3h/product-network/switch"
+    };
+  }
+
+  rpc GetControlVars (ControlVarRequest) returns (ControlVarReply) {
+    option (google.api.http) = {
+      get: "/c3h/product-network/control-vars"
+    };
+  }
+
+  rpc GetControlledVars (ControlledVarRequest) returns (ControlledVarReply) {
+    option (google.api.http) = {
+      get: "/c3h/product-network/controlled-vars"
+    };
+  }
+
+  rpc GetConfoundingVars (ConfoundingVarRequest) returns (ConfoundingVarReply) {
+    option (google.api.http) = {
+      get: "/c3h/product-network/confounding-cars"
+    };
+  }
+
+  rpc GetCatalyst (CatalystRequest) returns (CatalystReply) {
+    option (google.api.http) = {
+      get: "/c3h/product-network/catalyst"
+    };
+  }
+
+}
+
+message SwitchRequest {}
+message SwitchReply {
+  int32  DC_402_AB           = 1;
+  int32  DC_402_master       = 2;
+  int32  DC_402_manual       = 3;
+  string export_MAPD         = 4;
+  int32  reset_button        = 5;
+  int32  desiccant_button    = 6;
+  int32  communication_alarm = 7;
+}
+
+message ControlVarRequest {}
+message ControlVarReply {
+  string MAPD_input_concentration  = 1;
+  string MAPD_output_concentration = 2;
+  string C3_input_concentration    = 3;
+  string C3_output_concentration   = 4;
+}
+
+message ControlledVarRequest {}
+message ControlledVarReply {
+  string upper_h2_flow  = 1;
+  string lower_h2_flow  = 2;
+  string total_h2_flow  = 3;
+  string upper_ha_ratio = 4;
+}
+
+message ConfoundingVarRequest {}
+message ConfoundingVarReply {
+  string AB_input_temperature  = 1;
+  string AB_output_temperature = 2;
+  string FA_409_pressure       = 3;
+}
+
+message CatalystRequest {}
+message CatalystReply {
+  string ch3c            = 1;
+  string c3h4            = 2;
+  string c3h6            = 3;
+  string c3h8            = 4;
+  string c3_manual_input = 5;
+}

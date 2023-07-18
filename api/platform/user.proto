@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+option go_package = "c3h/api/platform;";
+
+service User {
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    option (google.api.http) = {
+      get: "/c3h/user/info"
+    };
+  }
+  rpc Login(LoginRequest) returns(LoginReply) {
+    option (google.api.http) = {
+      post: "/c3h/user/login"
+      body: "*"
+    };
+  }
+  rpc Logout(LogoutRequest) returns(LogoutReply) {
+    option (google.api.http) = {
+      post: "/c3h/user/logout"
+      body: "*"
+    };
+  }
+}
+
+message LoginRequest {}
+message LoginReply {}
+
+message LogoutRequest {}
+message LogoutReply {}
+
+
+
+message GetUserRequest {}
+message GetUserReply {}

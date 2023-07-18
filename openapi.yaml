@@ -1,0 +1,353 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /c3h/control-net/operation-vars:
+        post:
+            tags:
+                - ControlNet
+            operationId: ControlNet_SetOperationVars
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.control_network.SetOperationVarsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_network.SetOperationVarsReply'
+    /c3h/control-net/r401-apc:
+        post:
+            tags:
+                - ControlNet
+            operationId: ControlNet_SetR401APC
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.control_network.SetR401APCRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_network.SetR401APCReply'
+    /c3h/control-net/reactor-perf:
+        get:
+            tags:
+                - ControlNet
+            operationId: ControlNet_GetReactorPerf
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_network.GetReactorPerfReply'
+        post:
+            tags:
+                - ControlNet
+            operationId: ControlNet_ConfirmReactorPerf
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.control_network.ConfirmReactorPerfRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_network.ConfirmReactorPerfReply'
+    /c3h/industrial/all:
+        get:
+            tags:
+                - IndustrialData
+            operationId: IndustrialData_GetAllData
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetAllDataReply'
+    /c3h/industrial/controller:
+        get:
+            tags:
+                - IndustrialData
+            operationId: IndustrialData_GetControllerData
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetControllerDataReply'
+    /c3h/product-network/catalyst:
+        get:
+            tags:
+                - ProductNet
+            operationId: ProductNet_GetCatalyst
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.product_net.CatalystReply'
+    /c3h/product-network/confounding-cars:
+        get:
+            tags:
+                - ProductNet
+            operationId: ProductNet_GetConfoundingVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.product_net.ConfoundingVarReply'
+    /c3h/product-network/control-vars:
+        get:
+            tags:
+                - ProductNet
+            operationId: ProductNet_GetControlVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.product_net.ControlVarReply'
+    /c3h/product-network/controlled-vars:
+        get:
+            tags:
+                - ProductNet
+            operationId: ProductNet_GetControlledVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.product_net.ControlledVarReply'
+    /c3h/product-network/switch:
+        get:
+            tags:
+                - ProductNet
+            operationId: ProductNet_GetSwitchInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.product_net.SwitchReply'
+    /c3h/user/info:
+        get:
+            tags:
+                - User
+            operationId: User_GetUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.GetUserReply'
+    /c3h/user/login:
+        post:
+            tags:
+                - User
+            operationId: User_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.LoginReply'
+    /c3h/user/logout:
+        post:
+            tags:
+                - User
+            operationId: User_Logout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/.LogoutRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/.LogoutReply'
+components:
+    schemas:
+        .GetAllDataReply:
+            type: object
+            properties: {}
+        .GetControllerDataReply:
+            type: object
+            properties:
+                controllerMode:
+                    type: string
+                switchStatus:
+                    type: string
+                communicationStatus:
+                    type: string
+        .GetUserReply:
+            type: object
+            properties: {}
+        .LoginReply:
+            type: object
+            properties: {}
+        .LoginRequest:
+            type: object
+            properties: {}
+        .LogoutReply:
+            type: object
+            properties: {}
+        .LogoutRequest:
+            type: object
+            properties: {}
+        api.control_network.ConfirmReactorPerfReply:
+            type: object
+            properties: {}
+        api.control_network.ConfirmReactorPerfRequest:
+            type: object
+            properties: {}
+        api.control_network.GetReactorPerfReply:
+            type: object
+            properties:
+                MAPD:
+                    type: string
+                c3h6:
+                    type: string
+                c3h8:
+                    type: string
+        api.control_network.SetOperationVarsReply:
+            type: object
+            properties: {}
+        api.control_network.SetOperationVarsRequest:
+            type: object
+            properties:
+                rcyMaterialFlow:
+                    type: string
+                cHRation:
+                    type: string
+                entranceTemperature:
+                    type: string
+                hFlow:
+                    type: string
+        api.control_network.SetR401APCReply:
+            type: object
+            properties: {}
+        api.control_network.SetR401APCRequest:
+            type: object
+            properties:
+                MAPDControlMode:
+                    type: integer
+                    format: int32
+                APCSwitch:
+                    type: integer
+                    format: int32
+                APCWrite:
+                    type: integer
+                    format: int32
+                communicationLight:
+                    type: integer
+                    format: int32
+        api.product_net.CatalystReply:
+            type: object
+            properties:
+                ch3c:
+                    type: string
+                c3h4:
+                    type: string
+                c3h6:
+                    type: string
+                c3h8:
+                    type: string
+                c3ManualInput:
+                    type: string
+        api.product_net.ConfoundingVarReply:
+            type: object
+            properties:
+                ABInputTemperature:
+                    type: string
+                ABOutputTemperature:
+                    type: string
+                FA409Pressure:
+                    type: string
+        api.product_net.ControlVarReply:
+            type: object
+            properties:
+                MAPDInputConcentration:
+                    type: string
+                MAPDOutputConcentration:
+                    type: string
+                C3InputConcentration:
+                    type: string
+                C3OutputConcentration:
+                    type: string
+        api.product_net.ControlledVarReply:
+            type: object
+            properties:
+                upperH2Flow:
+                    type: string
+                lowerH2Flow:
+                    type: string
+                totalH2Flow:
+                    type: string
+                upperHaRatio:
+                    type: string
+        api.product_net.SwitchReply:
+            type: object
+            properties:
+                DC402AB:
+                    type: integer
+                    format: int32
+                DC402Master:
+                    type: integer
+                    format: int32
+                DC402Manual:
+                    type: integer
+                    format: int32
+                exportMAPD:
+                    type: string
+                resetButton:
+                    type: integer
+                    format: int32
+                desiccantButton:
+                    type: integer
+                    format: int32
+                communicationAlarm:
+                    type: integer
+                    format: int32
+tags:
+    - name: ControlNet
+    - name: IndustrialData
+    - name: ProductNet
+    - name: User
