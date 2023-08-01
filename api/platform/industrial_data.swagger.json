@@ -1,0 +1,110 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/platform/industrial_data.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "IndustrialData"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/c3h/industrial/all": {
+      "get": {
+        "operationId": "IndustrialData_GetAllData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetAllDataReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "IndustrialData"
+        ]
+      }
+    },
+    "/c3h/industrial/controller": {
+      "get": {
+        "operationId": "IndustrialData_GetControllerData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetControllerDataReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "IndustrialData"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetAllDataReply": {
+      "type": "object"
+    },
+    "GetControllerDataReply": {
+      "type": "object",
+      "properties": {
+        "controller_mode": {
+          "type": "string"
+        },
+        "switch_status": {
+          "type": "string"
+        },
+        "communication_status": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

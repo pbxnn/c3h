@@ -1,0 +1,229 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/control_net/control_network.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ControlNet"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/c3h/control-net/operation-vars": {
+      "post": {
+        "operationId": "ControlNet_SetOperationVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/control_netSetOperationVarsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/control_netSetOperationVarsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ControlNet"
+        ]
+      }
+    },
+    "/c3h/control-net/r401-apc": {
+      "post": {
+        "operationId": "ControlNet_SetR401APC",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/control_netSetR401APCReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/control_netSetR401APCRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ControlNet"
+        ]
+      }
+    },
+    "/c3h/control-net/reactor-perf": {
+      "get": {
+        "operationId": "ControlNet_GetReactorPerf",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/control_netGetReactorPerfReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ControlNet"
+        ]
+      },
+      "post": {
+        "operationId": "ControlNet_ConfirmReactorPerf",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/control_netConfirmReactorPerfReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/control_netConfirmReactorPerfRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ControlNet"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "control_netConfirmReactorPerfReply": {
+      "type": "object"
+    },
+    "control_netConfirmReactorPerfRequest": {
+      "type": "object"
+    },
+    "control_netGetReactorPerfReply": {
+      "type": "object",
+      "properties": {
+        "MAPD": {
+          "type": "string"
+        },
+        "c3h6": {
+          "type": "string"
+        },
+        "c3h8": {
+          "type": "string"
+        }
+      }
+    },
+    "control_netSetOperationVarsReply": {
+      "type": "object"
+    },
+    "control_netSetOperationVarsRequest": {
+      "type": "object",
+      "properties": {
+        "rcy_material_flow": {
+          "type": "string"
+        },
+        "c_h_ration": {
+          "type": "string"
+        },
+        "entrance_temperature": {
+          "type": "string"
+        },
+        "h_flow": {
+          "type": "string"
+        }
+      }
+    },
+    "control_netSetR401APCReply": {
+      "type": "object"
+    },
+    "control_netSetR401APCRequest": {
+      "type": "object",
+      "properties": {
+        "MAPD_control_mode": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "APC_switch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "APC_write": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "communication_light": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

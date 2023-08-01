@@ -1,0 +1,259 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/product_net/product_network.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ProductNet"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/c3h/product-net/catalyst": {
+      "get": {
+        "operationId": "ProductNet_GetCatalyst",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netCatalystReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/confounding-cars": {
+      "get": {
+        "operationId": "ProductNet_GetConfoundingVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netConfoundingVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/control-vars": {
+      "get": {
+        "operationId": "ProductNet_GetControlVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netControlVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/controlled-vars": {
+      "get": {
+        "operationId": "ProductNet_GetControlledVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netControlledVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/switch": {
+      "get": {
+        "operationId": "ProductNet_GetSwitchInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netSwitchReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "product_netCatalystReply": {
+      "type": "object",
+      "properties": {
+        "ch3c": {
+          "type": "string"
+        },
+        "c3h4": {
+          "type": "string"
+        },
+        "c3h6": {
+          "type": "string"
+        },
+        "c3h8": {
+          "type": "string"
+        },
+        "c3_manual_input": {
+          "type": "string"
+        }
+      }
+    },
+    "product_netConfoundingVarReply": {
+      "type": "object",
+      "properties": {
+        "AB_input_temperature": {
+          "type": "string"
+        },
+        "AB_output_temperature": {
+          "type": "string"
+        },
+        "FA_409_pressure": {
+          "type": "string"
+        }
+      }
+    },
+    "product_netControlVarReply": {
+      "type": "object",
+      "properties": {
+        "MAPD_input_concentration": {
+          "type": "string"
+        },
+        "MAPD_output_concentration": {
+          "type": "string"
+        },
+        "C3_input_concentration": {
+          "type": "string"
+        },
+        "C3_output_concentration": {
+          "type": "string"
+        }
+      }
+    },
+    "product_netControlledVarReply": {
+      "type": "object",
+      "properties": {
+        "upper_h2_flow": {
+          "type": "string"
+        },
+        "lower_h2_flow": {
+          "type": "string"
+        },
+        "total_h2_flow": {
+          "type": "string"
+        },
+        "upper_ha_ratio": {
+          "type": "string"
+        }
+      }
+    },
+    "product_netSwitchReply": {
+      "type": "object",
+      "properties": {
+        "DC_402_AB": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "DC_402_master": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "DC_402_manual": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "export_MAPD": {
+          "type": "string"
+        },
+        "reset_button": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "desiccant_button": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "communication_alarm": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

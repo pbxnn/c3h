@@ -35,11 +35,11 @@ type ProductNetHTTPServer interface {
 
 func RegisterProductNetHTTPServer(s *http.Server, srv ProductNetHTTPServer) {
 	r := s.Route("/")
-	r.GET("/c3h/product-network/switch", _ProductNet_GetSwitchInfo0_HTTP_Handler(srv))
-	r.GET("/c3h/product-network/control-vars", _ProductNet_GetControlVars0_HTTP_Handler(srv))
-	r.GET("/c3h/product-network/controlled-vars", _ProductNet_GetControlledVars0_HTTP_Handler(srv))
-	r.GET("/c3h/product-network/confounding-cars", _ProductNet_GetConfoundingVars0_HTTP_Handler(srv))
-	r.GET("/c3h/product-network/catalyst", _ProductNet_GetCatalyst0_HTTP_Handler(srv))
+	r.GET("/c3h/product-net/switch", _ProductNet_GetSwitchInfo0_HTTP_Handler(srv))
+	r.GET("/c3h/product-net/control-vars", _ProductNet_GetControlVars0_HTTP_Handler(srv))
+	r.GET("/c3h/product-net/controlled-vars", _ProductNet_GetControlledVars0_HTTP_Handler(srv))
+	r.GET("/c3h/product-net/confounding-vars", _ProductNet_GetConfoundingVars0_HTTP_Handler(srv))
+	r.GET("/c3h/product-net/catalyst", _ProductNet_GetCatalyst0_HTTP_Handler(srv))
 }
 
 func _ProductNet_GetSwitchInfo0_HTTP_Handler(srv ProductNetHTTPServer) func(ctx http.Context) error {
@@ -155,7 +155,7 @@ func NewProductNetHTTPClient(client *http.Client) ProductNetHTTPClient {
 
 func (c *ProductNetHTTPClientImpl) GetCatalyst(ctx context.Context, in *CatalystRequest, opts ...http.CallOption) (*CatalystReply, error) {
 	var out CatalystReply
-	pattern := "/c3h/product-network/catalyst"
+	pattern := "/c3h/product-net/catalyst"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationProductNetGetCatalyst))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -168,7 +168,7 @@ func (c *ProductNetHTTPClientImpl) GetCatalyst(ctx context.Context, in *Catalyst
 
 func (c *ProductNetHTTPClientImpl) GetConfoundingVars(ctx context.Context, in *ConfoundingVarRequest, opts ...http.CallOption) (*ConfoundingVarReply, error) {
 	var out ConfoundingVarReply
-	pattern := "/c3h/product-network/confounding-cars"
+	pattern := "/c3h/product-net/confounding-vars"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationProductNetGetConfoundingVars))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -181,7 +181,7 @@ func (c *ProductNetHTTPClientImpl) GetConfoundingVars(ctx context.Context, in *C
 
 func (c *ProductNetHTTPClientImpl) GetControlVars(ctx context.Context, in *ControlVarRequest, opts ...http.CallOption) (*ControlVarReply, error) {
 	var out ControlVarReply
-	pattern := "/c3h/product-network/control-vars"
+	pattern := "/c3h/product-net/control-vars"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationProductNetGetControlVars))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -194,7 +194,7 @@ func (c *ProductNetHTTPClientImpl) GetControlVars(ctx context.Context, in *Contr
 
 func (c *ProductNetHTTPClientImpl) GetControlledVars(ctx context.Context, in *ControlledVarRequest, opts ...http.CallOption) (*ControlledVarReply, error) {
 	var out ControlledVarReply
-	pattern := "/c3h/product-network/controlled-vars"
+	pattern := "/c3h/product-net/controlled-vars"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationProductNetGetControlledVars))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -207,7 +207,7 @@ func (c *ProductNetHTTPClientImpl) GetControlledVars(ctx context.Context, in *Co
 
 func (c *ProductNetHTTPClientImpl) GetSwitchInfo(ctx context.Context, in *SwitchRequest, opts ...http.CallOption) (*SwitchReply, error) {
 	var out SwitchReply
-	pattern := "/c3h/product-network/switch"
+	pattern := "/c3h/product-net/switch"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationProductNetGetSwitchInfo))
 	opts = append(opts, http.PathTemplate(pattern))

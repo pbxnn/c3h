@@ -4,7 +4,7 @@
 // - protoc             v3.19.1
 // source: control_net/control_network.proto
 
-package control_network
+package control_net
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ControlNet_SetR401APC_FullMethodName         = "/api.control_network.ControlNet/SetR401APC"
-	ControlNet_SetOperationVars_FullMethodName   = "/api.control_network.ControlNet/SetOperationVars"
-	ControlNet_ConfirmReactorPerf_FullMethodName = "/api.control_network.ControlNet/ConfirmReactorPerf"
-	ControlNet_GetReactorPerf_FullMethodName     = "/api.control_network.ControlNet/GetReactorPerf"
+	ControlNet_SetR401APC_FullMethodName         = "/api.control_net.ControlNet/SetR401APC"
+	ControlNet_SetOperationVars_FullMethodName   = "/api.control_net.ControlNet/SetOperationVars"
+	ControlNet_ConfirmReactorPerf_FullMethodName = "/api.control_net.ControlNet/ConfirmReactorPerf"
+	ControlNet_GetReactorPerf_FullMethodName     = "/api.control_net.ControlNet/GetReactorPerf"
 )
 
 // ControlNetClient is the client API for ControlNet service.
@@ -195,7 +195,7 @@ func _ControlNet_GetReactorPerf_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ControlNet_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.control_network.ControlNet",
+	ServiceName: "api.control_net.ControlNet",
 	HandlerType: (*ControlNetServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

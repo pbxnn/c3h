@@ -16,7 +16,7 @@ func Login(opts ...Option) middleware.Middleware {
 
 			r := getRole(ctx)
 
-			context.WithValue(ctx, "SecurityUserRoleContextKey", r)
+			ctx = context.WithValue(ctx, SecurityUserRoleContextKey, r)
 			return handler(ctx, req)
 		}
 	}
@@ -28,5 +28,5 @@ func checkLogin(ctx context.Context) error {
 }
 
 func getRole(ctx context.Context) string {
-	return ""
+	return "admin"
 }

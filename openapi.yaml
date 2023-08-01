@@ -15,7 +15,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.control_network.SetOperationVarsRequest'
+                            $ref: '#/components/schemas/api.control_net.SetOperationVarsRequest'
                 required: true
             responses:
                 "200":
@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.control_network.SetOperationVarsReply'
+                                $ref: '#/components/schemas/api.control_net.SetOperationVarsReply'
     /c3h/control-net/r401-apc:
         post:
             tags:
@@ -33,7 +33,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.control_network.SetR401APCRequest'
+                            $ref: '#/components/schemas/api.control_net.SetR401APCRequest'
                 required: true
             responses:
                 "200":
@@ -41,7 +41,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.control_network.SetR401APCReply'
+                                $ref: '#/components/schemas/api.control_net.SetR401APCReply'
     /c3h/control-net/reactor-perf:
         get:
             tags:
@@ -53,7 +53,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.control_network.GetReactorPerfReply'
+                                $ref: '#/components/schemas/api.control_net.GetReactorPerfReply'
         post:
             tags:
                 - ControlNet
@@ -62,7 +62,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.control_network.ConfirmReactorPerfRequest'
+                            $ref: '#/components/schemas/api.control_net.ConfirmReactorPerfRequest'
                 required: true
             responses:
                 "200":
@@ -70,7 +70,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.control_network.ConfirmReactorPerfReply'
+                                $ref: '#/components/schemas/api.control_net.ConfirmReactorPerfReply'
     /c3h/industrial/all:
         get:
             tags:
@@ -95,7 +95,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/.GetControllerDataReply'
-    /c3h/product-network/catalyst:
+    /c3h/product-net/catalyst:
         get:
             tags:
                 - ProductNet
@@ -107,7 +107,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.CatalystReply'
-    /c3h/product-network/confounding-cars:
+    /c3h/product-net/confounding-vars:
         get:
             tags:
                 - ProductNet
@@ -119,7 +119,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.ConfoundingVarReply'
-    /c3h/product-network/control-vars:
+    /c3h/product-net/control-vars:
         get:
             tags:
                 - ProductNet
@@ -131,7 +131,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.ControlVarReply'
-    /c3h/product-network/controlled-vars:
+    /c3h/product-net/controlled-vars:
         get:
             tags:
                 - ProductNet
@@ -143,7 +143,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.ControlledVarReply'
-    /c3h/product-network/switch:
+    /c3h/product-net/switch:
         get:
             tags:
                 - ProductNet
@@ -232,13 +232,13 @@ components:
         .LogoutRequest:
             type: object
             properties: {}
-        api.control_network.ConfirmReactorPerfReply:
+        api.control_net.ConfirmReactorPerfReply:
             type: object
             properties: {}
-        api.control_network.ConfirmReactorPerfRequest:
+        api.control_net.ConfirmReactorPerfRequest:
             type: object
             properties: {}
-        api.control_network.GetReactorPerfReply:
+        api.control_net.GetReactorPerfReply:
             type: object
             properties:
                 MAPD:
@@ -247,10 +247,10 @@ components:
                     type: string
                 c3h8:
                     type: string
-        api.control_network.SetOperationVarsReply:
+        api.control_net.SetOperationVarsReply:
             type: object
             properties: {}
-        api.control_network.SetOperationVarsRequest:
+        api.control_net.SetOperationVarsRequest:
             type: object
             properties:
                 rcyMaterialFlow:
@@ -261,10 +261,10 @@ components:
                     type: string
                 hFlow:
                     type: string
-        api.control_network.SetR401APCReply:
+        api.control_net.SetR401APCReply:
             type: object
             properties: {}
-        api.control_network.SetR401APCRequest:
+        api.control_net.SetR401APCRequest:
             type: object
             properties:
                 MAPDControlMode:
@@ -282,70 +282,93 @@ components:
         api.product_net.CatalystReply:
             type: object
             properties:
-                ch3c:
-                    type: string
-                c3h4:
-                    type: string
-                c3h6:
-                    type: string
-                c3h8:
-                    type: string
-                c3ManualInput:
-                    type: string
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.product_net.VarReplyData'
         api.product_net.ConfoundingVarReply:
             type: object
             properties:
-                ABInputTemperature:
-                    type: string
-                ABOutputTemperature:
-                    type: string
-                FA409Pressure:
-                    type: string
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.product_net.VarReplyData'
         api.product_net.ControlVarReply:
             type: object
             properties:
-                MAPDInputConcentration:
-                    type: string
-                MAPDOutputConcentration:
-                    type: string
-                C3InputConcentration:
-                    type: string
-                C3OutputConcentration:
-                    type: string
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.product_net.VarReplyData'
         api.product_net.ControlledVarReply:
             type: object
             properties:
-                upperH2Flow:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.product_net.VarReplyData'
+        api.product_net.SwitchDetail:
+            type: object
+            properties:
+                text:
                     type: string
-                lowerH2Flow:
-                    type: string
-                totalH2Flow:
-                    type: string
-                upperHaRatio:
+                type:
                     type: string
         api.product_net.SwitchReply:
             type: object
             properties:
-                DC402AB:
+                code:
                     type: integer
                     format: int32
-                DC402Master:
-                    type: integer
-                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.product_net.SwitchReplyData'
+        api.product_net.SwitchReplyData:
+            type: object
+            properties:
+                DC402Total:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
                 DC402Manual:
-                    type: integer
-                    format: int32
-                exportMAPD:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
+                DC402AB:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
+                MAPDExport:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
+                drier:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
+                communication:
+                    $ref: '#/components/schemas/api.product_net.SwitchDetail'
+        api.product_net.VarDetail:
+            type: object
+            properties:
+                name:
                     type: string
-                resetButton:
-                    type: integer
-                    format: int32
-                desiccantButton:
-                    type: integer
-                    format: int32
-                communicationAlarm:
-                    type: integer
-                    format: int32
+                desc:
+                    type: string
+                realValue:
+                    type: number
+                    format: double
+                setValue:
+                    type: number
+                    format: double
+                lowLimit:
+                    type: number
+                    format: double
+                highLimit:
+                    type: number
+                    format: double
+                unit:
+                    type: string
+        api.product_net.VarReplyData:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.product_net.VarDetail'
 tags:
     - name: ControlNet
     - name: IndustrialData

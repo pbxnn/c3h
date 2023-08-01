@@ -12,75 +12,89 @@ service ProductNet {
 
   rpc GetSwitchInfo (SwitchRequest) returns (SwitchReply) {
     option (google.api.http) = {
-      get: "/c3h/product-network/switch"
+      get: "/c3h/product-net/switch"
     };
   }
 
   rpc GetControlVars (ControlVarRequest) returns (ControlVarReply) {
     option (google.api.http) = {
-      get: "/c3h/product-network/control-vars"
+      get: "/c3h/product-net/control-vars"
     };
   }
 
   rpc GetControlledVars (ControlledVarRequest) returns (ControlledVarReply) {
     option (google.api.http) = {
-      get: "/c3h/product-network/controlled-vars"
+      get: "/c3h/product-net/controlled-vars"
     };
   }
 
   rpc GetConfoundingVars (ConfoundingVarRequest) returns (ConfoundingVarReply) {
     option (google.api.http) = {
-      get: "/c3h/product-network/confounding-cars"
+      get: "/c3h/product-net/confounding-vars"
     };
   }
 
   rpc GetCatalyst (CatalystRequest) returns (CatalystReply) {
     option (google.api.http) = {
-      get: "/c3h/product-network/catalyst"
+      get: "/c3h/product-net/catalyst"
     };
   }
-
 }
 
 message SwitchRequest {}
 message SwitchReply {
-  int32  DC_402_AB           = 1;
-  int32  DC_402_master       = 2;
-  int32  DC_402_manual       = 3;
-  string export_MAPD         = 4;
-  int32  reset_button        = 5;
-  int32  desiccant_button    = 6;
-  int32  communication_alarm = 7;
+  int32           code = 1;
+  SwitchReplyData data = 2;
+}
+
+message SwitchReplyData {
+  SwitchDetail DC_402_Total  = 1;
+  SwitchDetail DC_402_Manual = 2;
+  SwitchDetail DC_402_AB     = 3;
+  SwitchDetail MAPD_export   = 4;
+  SwitchDetail drier         = 5;
+  SwitchDetail communication = 6;
+}
+
+message SwitchDetail {
+  string text = 1;
+  string type = 2;
 }
 
 message ControlVarRequest {}
 message ControlVarReply {
-  string MAPD_input_concentration  = 1;
-  string MAPD_output_concentration = 2;
-  string C3_input_concentration    = 3;
-  string C3_output_concentration   = 4;
+  int32        code = 1;
+  VarReplyData data = 2;
 }
 
 message ControlledVarRequest {}
 message ControlledVarReply {
-  string upper_h2_flow  = 1;
-  string lower_h2_flow  = 2;
-  string total_h2_flow  = 3;
-  string upper_ha_ratio = 4;
+  int32        code = 1;
+  VarReplyData data = 2;
 }
 
 message ConfoundingVarRequest {}
 message ConfoundingVarReply {
-  string AB_input_temperature  = 1;
-  string AB_output_temperature = 2;
-  string FA_409_pressure       = 3;
+  int32        code = 1;
+  VarReplyData data = 2;
 }
 
 message CatalystRequest {}
 message CatalystReply {
-  string ch3c            = 1;
-  string c3h4            = 2;
-  string c3h6            = 3;
-  string c3h8            = 4;
-  string c3_manual_input = 5;
+  int32        code = 1;
+  VarReplyData data = 2;
+}
+
+message VarReplyData {
+  repeated VarDetail list = 1;
+}
+
+message VarDetail {
+  string name       = 1;
+  string desc       = 2;
+  double real_value = 3;
+  double set_value  = 4;
+  double low_limit  = 5;
+  double high_limit = 6;
+  string unit       = 7;
 }

@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package api.control_network;
+package api.control_net;
 
 import "google/api/annotations.proto";
 
-option go_package = "c3h/api/control_network;control_network";
+option go_package = "c3h/api/control_network;control_net";
 option java_multiple_files = true;
 option java_package = "api.control_network";
 

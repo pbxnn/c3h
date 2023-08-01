@@ -4,7 +4,7 @@
 // - protoc             v3.19.1
 // source: control_net/control_network.proto
 
-package control_network
+package control_net
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationControlNetConfirmReactorPerf = "/api.control_network.ControlNet/ConfirmReactorPerf"
-const OperationControlNetGetReactorPerf = "/api.control_network.ControlNet/GetReactorPerf"
-const OperationControlNetSetOperationVars = "/api.control_network.ControlNet/SetOperationVars"
-const OperationControlNetSetR401APC = "/api.control_network.ControlNet/SetR401APC"
+const OperationControlNetConfirmReactorPerf = "/api.control_net.ControlNet/ConfirmReactorPerf"
+const OperationControlNetGetReactorPerf = "/api.control_net.ControlNet/GetReactorPerf"
+const OperationControlNetSetOperationVars = "/api.control_net.ControlNet/SetOperationVars"
+const OperationControlNetSetR401APC = "/api.control_net.ControlNet/SetR401APC"
 
 type ControlNetHTTPServer interface {
 	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*ConfirmReactorPerfReply, error)

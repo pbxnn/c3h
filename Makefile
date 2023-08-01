@@ -45,6 +45,16 @@ api:
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
 	       $(API_PROTO_FILES)
 
+.PHONY: swagger
+# generate swagger-ui
+swagger:
+	protoc --proto_path=./api \
+           --proto_path=./third_party \
+           --openapiv2_out . \
+           --openapiv2_opt logtostderr=true \
+           --openapiv2_opt json_names_for_fields=false \
+           $(API_PROTO_FILES)
+
 .PHONY: validate
 # generate validate proto
 validate:
