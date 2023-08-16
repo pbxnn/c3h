@@ -7,4 +7,5 @@ var BProviderSet = wire.NewSet(
 	NewProductNetUsecase,
 	NewControlNetUsecase,
 	NewAuditLogUsecase,
+	NewR401SUsecase,
 )

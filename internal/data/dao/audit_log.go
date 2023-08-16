@@ -13,8 +13,8 @@ type AuditLog struct {
 	Resource  uint
 	IsSuccess uint
 	Details   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt *time.Time
+	UpdatedAt *time.Time
 }
 
 func (al *AuditLog) TableName() string {

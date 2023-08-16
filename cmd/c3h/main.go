@@ -100,7 +100,7 @@ func main() {
 	defer cleanup()
 
 	// start cron job
-	c3h.Cron.Start()
+	//c3h.Cron.Start()
 
 	// start and wait for stop signal
 	if err := c3h.App.Run(); err != nil {

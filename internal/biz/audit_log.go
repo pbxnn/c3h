@@ -3,6 +3,7 @@ package biz
 import (
 	"c3h/api/control_net"
 	"c3h/api/platform"
+	"c3h/api/r401s"
 	"c3h/internal/data/dao"
 	"context"
 	"encoding/json"
@@ -17,9 +18,11 @@ import (
 
 // http请求相关操作类型（1-1000）
 const (
-	OperationSetR401Apc = iota + 1
-	OperationSetOperationVars
-	OperationConfirmReactorPerformance
+	OpSetR401Apc = iota + 1
+	OpSetOperationVars
+	OpConfirmReactorPerformance
+
+	OpR401SConfirmReactorPerformance
 )
 
 // cron job相关操作类型（1001-2000）
@@ -32,6 +35,8 @@ const (
 	ResourceR401Apc = iota + 1
 	ResourceOperationVars
 	ResourceReactorPerformance
+
+	ResourceR401SReactorPerformance
 )
 
 // cron job相关资源类型（1001-2000）
@@ -40,9 +45,11 @@ const (
 )
 
 var operationMap = map[string]uint{
-	control_net.OperationControlNetSetR401APC:         OperationSetR401Apc,
-	control_net.OperationControlNetSetOperationVars:   OperationSetOperationVars,
-	control_net.OperationControlNetConfirmReactorPerf: OperationConfirmReactorPerformance,
+	control_net.OperationControlNetSetR401APC:         OpSetR401Apc,
+	control_net.OperationControlNetSetOperationVars:   OpSetOperationVars,
+	control_net.OperationControlNetConfirmReactorPerf: OpConfirmReactorPerformance,
+
+	r401s.OperationR401SConfirmReactorPerf: OpR401SConfirmReactorPerformance,
 
 	platform.OperationProductNetCollectData: OperationCollectData,
 }
@@ -51,6 +58,8 @@ var resourceMap = map[string]uint{
 	control_net.OperationControlNetSetR401APC:         ResourceR401Apc,
 	control_net.OperationControlNetSetOperationVars:   ResourceOperationVars,
 	control_net.OperationControlNetConfirmReactorPerf: ResourceReactorPerformance,
+
+	r401s.OperationR401SConfirmReactorPerf: ResourceR401SReactorPerformance,
 
 	platform.OperationProductNetCollectData: ResourceCollectData,
 }

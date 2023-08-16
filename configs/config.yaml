@@ -3,11 +3,11 @@ version: 1.0
 server:
   http:
     addr: 0.0.0.0:8000
-    timeout: 1s
+    timeout: 0s
 data:
   database:
     driver: mysql
-    source: zxn:pbzxn@tcp(127.0.0.1:3306)/c3h
+    source: zxn:pbzxn@tcp(127.0.0.1:3306)/c3h?parseTime=true
   cache:
     size: 1024000000
   industrial_api:

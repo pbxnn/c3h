@@ -2,7 +2,7 @@ package dao
 
 import "time"
 
-const DataInfoTblName = "c3h_module_data_map"
+const DataInfoTblName = "c3h_data_info"
 
 type DataInfo struct {
 	ID        uint
@@ -12,6 +12,7 @@ type DataInfo struct {
 	Type      uint
 	RealValue float64
 	SetValue  float64
+	CalcValue float64
 	LowLimit  float64
 	HighLimit float64
 	Unit      string

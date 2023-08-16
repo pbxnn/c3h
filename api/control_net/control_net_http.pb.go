@@ -40,11 +40,11 @@ type ControlNetHTTPServer interface {
 func RegisterControlNetHTTPServer(s *http.Server, srv ControlNetHTTPServer) {
 	r := s.Route("/")
 	r.GET("/c3h/control-net/r401-apc", _ControlNet_GetR401APC0_HTTP_Handler(srv))
-	r.GET("/c3h/control-net/operation-vars", _ControlNet_GetOperationVars0_HTTP_Handler(srv))
-	r.GET("/c3h/control-net/reactor-performance", _ControlNet_GetReactorPerformance0_HTTP_Handler(srv))
+	r.GET("/c3h/control-net/operation-vars", _ControlNet_GetOperationVars1_HTTP_Handler(srv))
+	r.GET("/c3h/control-net/reactor-performance", _ControlNet_GetReactorPerformance1_HTTP_Handler(srv))
 	r.POST("/c3h/control-net/r401-apc", _ControlNet_SetR401APC0_HTTP_Handler(srv))
 	r.POST("/c3h/control-net/operation-vars", _ControlNet_SetOperationVars0_HTTP_Handler(srv))
-	r.POST("/c3h/control-net/reactor-perf", _ControlNet_ConfirmReactorPerf0_HTTP_Handler(srv))
+	r.POST("/c3h/control-net/reactor-perf", _ControlNet_ConfirmReactorPerf1_HTTP_Handler(srv))
 	r.GET("/c3h/control-net/reactor-perf", _ControlNet_GetReactorPerf0_HTTP_Handler(srv))
 }
 
@@ -67,7 +67,7 @@ func _ControlNet_GetR401APC0_HTTP_Handler(srv ControlNetHTTPServer) func(ctx htt
 	}
 }
 
-func _ControlNet_GetOperationVars0_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
+func _ControlNet_GetOperationVars1_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetOperationVarsRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -86,7 +86,7 @@ func _ControlNet_GetOperationVars0_HTTP_Handler(srv ControlNetHTTPServer) func(c
 	}
 }
 
-func _ControlNet_GetReactorPerformance0_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
+func _ControlNet_GetReactorPerformance1_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetReactorPerformanceRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -143,7 +143,7 @@ func _ControlNet_SetOperationVars0_HTTP_Handler(srv ControlNetHTTPServer) func(c
 	}
 }
 
-func _ControlNet_ConfirmReactorPerf0_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
+func _ControlNet_ConfirmReactorPerf1_HTTP_Handler(srv ControlNetHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ConfirmReactorPerfRequest
 		if err := ctx.Bind(&in); err != nil {

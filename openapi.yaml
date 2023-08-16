@@ -177,6 +177,119 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.SwitchReply'
+    /c3h/r401s/confounding-vars:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetConfoundingVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarListReply'
+    /c3h/r401s/operation-vars:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetOperationVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarListReply'
+    /c3h/r401s/reactor-perf:
+        post:
+            tags:
+                - R401S
+            operationId: R401S_ConfirmReactorPerf
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.r401s.ConfirmReactorPerfRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.ConfirmReactorPerfReply'
+    /c3h/r401s/reactor-performance:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetReactorPerformance
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarListReply'
+    /c3h/r401s/reset:
+        post:
+            tags:
+                - R401S
+            operationId: R401S_Reset
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.r401s.ResetRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarReply'
+    /c3h/r401s/status-vars:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetStatusVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarListReply'
+    /c3h/r401s/switch:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetSwitchInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarListReply'
+        post:
+            tags:
+                - R401S
+            operationId: R401S_SetSwitchInfo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.r401s.SetSwitchInfoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.VarReply'
 components:
     schemas:
         api.control_net.ConfirmReactorPerfReply:
@@ -373,7 +486,100 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.product_net.VarDetail'
+        api.r401s.ConfirmReactorPerfReply:
+            type: object
+            properties: {}
+        api.r401s.ConfirmReactorPerfRequest:
+            type: object
+            properties: {}
+        api.r401s.ResetRequest:
+            type: object
+            properties:
+                switchName:
+                    type: string
+                switchKey:
+                    type: string
+                switchStatus:
+                    type: string
+        api.r401s.SetSwitchInfoRequest:
+            type: object
+            properties:
+                switchName:
+                    type: string
+                switchKey:
+                    type: string
+                switchStatus:
+                    type: string
+        api.r401s.VarDetail:
+            type: object
+            properties:
+                name:
+                    type: string
+                key:
+                    type: string
+                desc:
+                    type: string
+                type:
+                    type: integer
+                    format: int32
+                realValue:
+                    type: number
+                    format: double
+                setValue:
+                    type: number
+                    format: double
+                calcValue:
+                    type: number
+                    format: double
+                lowLimit:
+                    type: number
+                    format: double
+                highLimit:
+                    type: number
+                    format: double
+                unit:
+                    type: string
+                editAble:
+                    type: boolean
+                extra:
+                    $ref: '#/components/schemas/api.r401s.VarDetailExtra'
+        api.r401s.VarDetailExtra:
+            type: object
+            properties:
+                editAble:
+                    type: boolean
+                resetAble:
+                    type: boolean
+                hasControlSwitch:
+                    type: boolean
+                controlSwithStatus:
+                    type: integer
+                    format: int32
+        api.r401s.VarListReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.r401s.VarReplyData'
+        api.r401s.VarReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.r401s.VarDetail'
+        api.r401s.VarReplyData:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
 tags:
     - name: ControlNet
     - name: ProductNet
     - name: ProductNet
+    - name: R401S

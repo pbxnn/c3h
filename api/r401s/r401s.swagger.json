@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "control_net/control_net.proto",
+    "title": "r401s/r401s.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "ControlNet"
+      "name": "R401S"
     }
   ],
   "consumes": [
@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/c3h/control-net/operation-vars": {
+    "/c3h/r401s/confounding-vars": {
       "get": {
-        "operationId": "ControlNet_GetOperationVars",
+        "operationId": "R401S_GetConfoundingVars",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/control_netGetOperationVarsReply"
+              "$ref": "#/definitions/r401sVarListReply"
             }
           },
           "default": {
@@ -34,16 +34,40 @@
           }
         },
         "tags": [
-          "ControlNet"
+          "R401S"
         ]
-      },
-      "post": {
-        "operationId": "ControlNet_SetOperationVars",
+      }
+    },
+    "/c3h/r401s/operation-vars": {
+      "get": {
+        "operationId": "R401S_GetOperationVars",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apicontrol_netSetOperationVarsReply"
+              "$ref": "#/definitions/r401sVarListReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "R401S"
+        ]
+      }
+    },
+    "/c3h/r401s/reactor-perf": {
+      "post": {
+        "operationId": "R401S_ConfirmReactorPerf",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apir401sConfirmReactorPerfReply"
             }
           },
           "default": {
@@ -59,23 +83,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apicontrol_netSetOperationVarsRequest"
+              "$ref": "#/definitions/apir401sConfirmReactorPerfRequest"
             }
           }
         ],
         "tags": [
-          "ControlNet"
+          "R401S"
         ]
       }
     },
-    "/c3h/control-net/r401-apc": {
+    "/c3h/r401s/reactor-performance": {
       "get": {
-        "operationId": "ControlNet_GetR401APC",
+        "operationId": "R401S_GetReactorPerformance",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/control_netGetR401Reply"
+              "$ref": "#/definitions/r401sVarListReply"
             }
           },
           "default": {
@@ -86,16 +110,18 @@
           }
         },
         "tags": [
-          "ControlNet"
+          "R401S"
         ]
-      },
+      }
+    },
+    "/c3h/r401s/reset": {
       "post": {
-        "operationId": "ControlNet_SetR401APC",
+        "operationId": "R401S_Reset",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apicontrol_netSetR401APCReply"
+              "$ref": "#/definitions/r401sVarReply"
             }
           },
           "default": {
@@ -111,23 +137,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apicontrol_netSetR401APCRequest"
+              "$ref": "#/definitions/r401sResetRequest"
             }
           }
         ],
         "tags": [
-          "ControlNet"
+          "R401S"
         ]
       }
     },
-    "/c3h/control-net/reactor-perf": {
+    "/c3h/r401s/status-vars": {
       "get": {
-        "operationId": "ControlNet_GetReactorPerf",
+        "operationId": "R401S_GetStatusVars",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apicontrol_netGetReactorPerfReply"
+              "$ref": "#/definitions/r401sVarListReply"
             }
           },
           "default": {
@@ -138,16 +164,38 @@
           }
         },
         "tags": [
-          "ControlNet"
+          "R401S"
         ]
-      },
-      "post": {
-        "operationId": "ControlNet_ConfirmReactorPerf",
+      }
+    },
+    "/c3h/r401s/switch": {
+      "get": {
+        "operationId": "R401S_GetSwitchInfo",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apicontrol_netConfirmReactorPerfReply"
+              "$ref": "#/definitions/r401sVarListReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "R401S"
+        ]
+      },
+      "post": {
+        "operationId": "R401S_SetSwitchInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/r401sVarReply"
             }
           },
           "default": {
@@ -163,114 +211,48 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apicontrol_netConfirmReactorPerfRequest"
+              "$ref": "#/definitions/r401sSetSwitchInfoRequest"
             }
           }
         ],
         "tags": [
-          "ControlNet"
-        ]
-      }
-    },
-    "/c3h/control-net/reactor-performance": {
-      "get": {
-        "operationId": "ControlNet_GetReactorPerformance",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/control_netGetReactorPerformanceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "ControlNet"
+          "R401S"
         ]
       }
     }
   },
   "definitions": {
-    "apicontrol_netConfirmReactorPerfReply": {
+    "apir401sConfirmReactorPerfReply": {
       "type": "object"
     },
-    "apicontrol_netConfirmReactorPerfRequest": {
+    "apir401sConfirmReactorPerfRequest": {
       "type": "object"
     },
-    "apicontrol_netGetReactorPerfReply": {
-      "type": "object",
-      "properties": {
-        "MAPD": {
-          "type": "string"
-        },
-        "c3h6": {
-          "type": "string"
-        },
-        "c3h8": {
-          "type": "string"
-        }
-      }
-    },
-    "apicontrol_netSetOperationVarsReply": {
-      "type": "object"
-    },
-    "apicontrol_netSetOperationVarsRequest": {
-      "type": "object",
-      "properties": {
-        "rcy_material_flow": {
-          "type": "string"
-        },
-        "c_h_ration": {
-          "type": "string"
-        },
-        "entrance_temperature": {
-          "type": "string"
-        },
-        "h_flow": {
-          "type": "string"
-        }
-      }
-    },
-    "apicontrol_netSetR401APCReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "apicontrol_netSetR401APCRequest": {
+    "apir401sVarDetail": {
       "type": "object",
       "properties": {
         "name": {
           "type": "string"
         },
-        "set_value": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "apicontrol_netVarDetail": {
-      "type": "object",
-      "properties": {
-        "name": {
+        "key": {
           "type": "string"
         },
         "desc": {
           "type": "string"
+        },
+        "type": {
+          "type": "integer",
+          "format": "int32"
         },
         "real_value": {
           "type": "number",
           "format": "double"
         },
         "set_value": {
+          "type": "number",
+          "format": "double"
+        },
+        "calc_value": {
           "type": "number",
           "format": "double"
         },
@@ -288,59 +270,20 @@
         "edit_able": {
           "type": "boolean"
         },
-        "is_switch": {
-          "type": "boolean"
-        },
-        "switch_status": {
-          "type": "boolean"
+        "extra": {
+          "$ref": "#/definitions/r401sVarDetailExtra"
         }
       }
     },
-    "apicontrol_netVarReplyData": {
+    "apir401sVarReplyData": {
       "type": "object",
       "properties": {
         "list": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/apicontrol_netVarDetail"
+            "$ref": "#/definitions/apir401sVarDetail"
           }
-        }
-      }
-    },
-    "control_netGetOperationVarsReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/apicontrol_netVarReplyData"
-        }
-      }
-    },
-    "control_netGetR401Reply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/apicontrol_netVarReplyData"
-        }
-      }
-    },
-    "control_netGetReactorPerformanceReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/apicontrol_netVarReplyData"
         }
       }
     },
@@ -352,6 +295,76 @@
         }
       },
       "additionalProperties": {}
+    },
+    "r401sResetRequest": {
+      "type": "object",
+      "properties": {
+        "switch_name": {
+          "type": "string"
+        },
+        "switch_key": {
+          "type": "string"
+        },
+        "switch_status": {
+          "type": "string"
+        }
+      }
+    },
+    "r401sSetSwitchInfoRequest": {
+      "type": "object",
+      "properties": {
+        "switch_name": {
+          "type": "string"
+        },
+        "switch_key": {
+          "type": "string"
+        },
+        "switch_status": {
+          "type": "string"
+        }
+      }
+    },
+    "r401sVarDetailExtra": {
+      "type": "object",
+      "properties": {
+        "edit_able": {
+          "type": "boolean"
+        },
+        "reset_able": {
+          "type": "boolean"
+        },
+        "has_control_switch": {
+          "type": "boolean"
+        },
+        "control_swith_status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "r401sVarListReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apir401sVarReplyData"
+        }
+      }
+    },
+    "r401sVarReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apir401sVarDetail"
+        }
+      }
     },
     "rpcStatus": {
       "type": "object",

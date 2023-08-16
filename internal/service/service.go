@@ -8,4 +8,5 @@ import (
 var SvcProviderSet = wire.NewSet(
 	NewProductNetService,
 	NewControlNetService,
+	NewR401SService,
 )

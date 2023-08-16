@@ -3,6 +3,7 @@ package server
 import (
 	"c3h/api/control_net"
 	"c3h/api/product_net"
+	"c3h/api/r401s"
 	"c3h/internal/biz"
 	"c3h/internal/conf"
 	"c3h/internal/service"
@@ -22,7 +23,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bc *conf.Bootstrap, alu *biz.AuditLogUsecase, cn *service.ControlNetService, pn *service.ProductNetService, logger log.Logger) *http.Server {
+func NewHTTPServer(bc *conf.Bootstrap, alu *biz.AuditLogUsecase, cn *service.ControlNetService, pn *service.ProductNetService, rs *service.R401SService, logger log.Logger) *http.Server {
 
 	initTracer()
 
@@ -52,6 +53,7 @@ func NewHTTPServer(bc *conf.Bootstrap, alu *biz.AuditLogUsecase, cn *service.Con
 
 	product_net.RegisterProductNetHTTPServer(srv, pn)
 	control_net.RegisterControlNetHTTPServer(srv, cn)
+	r401s.RegisterR401SHTTPServer(srv, rs)
 
 	openAPIHandler := openapiv2.NewHandler()
 	srv.HandlePrefix("/q/", openAPIHandler)

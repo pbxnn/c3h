@@ -44,25 +44,25 @@ func (mr *ModuleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
 		return
 	}
 
-	moduleMap := map[uint]*dao.ModuleInfo{}
+	moduleMap := map[string]*dao.ModuleInfo{}
 	for idx, item := range moduleList {
-		moduleMap[item.ID] = moduleList[idx]
+		moduleMap[item.Key] = moduleList[idx]
 	}
 
-	dataMap := map[uint]*dao.DataInfo{}
+	dataMap := map[string]*dao.DataInfo{}
 	for idx, item := range dataList {
-		dataMap[item.ID] = dataList[idx]
+		dataMap[item.Key] = dataList[idx]
 	}
 
 	moduleRelation := map[string][]string{}
 	for _, item := range mdList {
 		var mKey string
 		var dKey string
-		if m, ok := moduleMap[item.ModuleID]; ok {
+		if m, ok := moduleMap[item.ModuleKey]; ok {
 			mKey = m.Key
 		}
 
-		if d, ok := dataMap[item.DataID]; ok {
+		if d, ok := dataMap[item.DataKey]; ok {
 			dKey = d.Key
 		}
 
@@ -81,4 +81,10 @@ func (mr *ModuleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
 			mr.logger.Warn()
 		}
 	}
+}
+
+func (mr *ModuleRelationRepo) GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
+	var res []*dao.ModuleDataMap
+	err := mr.db.WithContext(ctx).Table(dao.ModuleDataMapTblName).Where("module_key", moduleKey).Find(&res).Error
+	return res, err
 }
