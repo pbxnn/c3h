@@ -16,3 +16,23 @@ func NewProductNetUsecase(pnr ProductNetRepo, logger log.Logger) *ProductNetUsec
 		logger: log.NewHelper(log.With(logger, "module", "product-net-usecase")),
 	}
 }
+
+func (pnu *ProductNetUsecase) GetSwitchInfo() {
+
+}
+
+func (pnu *ProductNetUsecase) GetControlVars() {
+
+}
+
+func (pnu *ProductNetUsecase) GetControllerVars() {
+
+}
+
+func (pnu *ProductNetUsecase) GetConfoundingVars() {
+
+}
+
+func (pnu *ProductNetUsecase) GetCatalyst() {
+
+}

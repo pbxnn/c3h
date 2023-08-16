@@ -50,7 +50,7 @@ api:
 swagger:
 	protoc --proto_path=./api \
            --proto_path=./third_party \
-           --openapiv2_out . \
+           --openapiv2_out ./api \
            --openapiv2_opt logtostderr=true \
            --openapiv2_opt json_names_for_fields=false \
            $(API_PROTO_FILES)

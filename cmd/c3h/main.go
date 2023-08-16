@@ -4,6 +4,8 @@ import (
 	"flag"
 	"os"
 
+	"github.com/robfig/cron/v3"
+
 	"c3h/internal/conf"
 	myLog "c3h/pkg/log"
 
@@ -29,21 +31,29 @@ var (
 	id, _ = os.Hostname()
 )
 
+type C3h struct {
+	Cron *cron.Cron
+	App  *kratos.App
+}
+
 func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server) *kratos.App {
-	return kratos.New(
-		kratos.ID(id),
-		kratos.Name(Name),
-		kratos.Version(Version),
-		kratos.Metadata(map[string]string{}),
-		kratos.Logger(logger),
-		kratos.Server(
-			hs,
+func newApp(logger log.Logger, hs *http.Server, c *cron.Cron) *C3h {
+	return &C3h{
+		Cron: c,
+		App: kratos.New(
+			kratos.ID(id),
+			kratos.Name(Name),
+			kratos.Version(Version),
+			kratos.Metadata(map[string]string{}),
+			kratos.Logger(logger),
+			kratos.Server(
+				hs,
+			),
 		),
-	)
+	}
 }
 
 func main() {
@@ -83,14 +93,17 @@ func main() {
 		"span.id", tracing.SpanID(),
 	)
 
-	app, cleanup, err := wireApp(&bc, bc.Data, logger)
+	c3h, cleanup, err := wireApp(&bc, bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
+	// start cron job
+	c3h.Cron.Start()
+
 	// start and wait for stop signal
-	if err := app.Run(); err != nil {
+	if err := c3h.App.Run(); err != nil {
 		panic(err)
 	}
 }

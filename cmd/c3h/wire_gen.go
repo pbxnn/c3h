@@ -10,9 +10,9 @@ import (
 	"c3h/internal/biz"
 	"c3h/internal/conf"
 	"c3h/internal/data"
+	"c3h/internal/job"
 	"c3h/internal/server"
 	"c3h/internal/service"
-	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -23,16 +23,19 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(bootstrap *conf.Bootstrap, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(bootstrap *conf.Bootstrap, confData *conf.Data, logger log.Logger) (*C3h, func(), error) {
 	db := data.NewDB(confData, logger)
-	controlNetRepo := data.NewControlNetRepo(logger)
-	controlNetUsecase := biz.NewControlNetUsecase(controlNetRepo, logger)
-	controlNetService := service.NewControlNetService(controlNetUsecase, logger)
+	auditLogRepo := data.NewAuditLogRepo(db, logger)
+	auditLogUsecase := biz.NewAuditLogUsecase(auditLogRepo, logger)
+	controlNetService := service.NewControlNetService()
 	productNetRepo := data.NewProductNetRepo(logger)
 	productNetUsecase := biz.NewProductNetUsecase(productNetRepo, logger)
 	productNetService := service.NewProductNetService(productNetUsecase, logger)
-	httpServer := server.NewHTTPServer(bootstrap, db, controlNetService, productNetService, logger)
-	app := newApp(logger, httpServer)
-	return app, func() {
+	httpServer := server.NewHTTPServer(bootstrap, auditLogUsecase, controlNetService, productNetService, logger)
+	cronLogger := job.NewCronLogger(logger)
+	collectJob := job.NewCollectJob(bootstrap, logger)
+	cron := job.NewCron(cronLogger, collectJob)
+	c3h := newApp(logger, httpServer, cron)
+	return c3h, func() {
 	}, nil
 }

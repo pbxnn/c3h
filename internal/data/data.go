@@ -3,6 +3,7 @@ package data
 import (
 	"c3h/api/platform"
 	"c3h/internal/conf"
+	"c3h/pkg/cache"
 	"context"
 
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -23,24 +24,33 @@ import (
 var DProviderSet = wire.NewSet(
 	NewData,
 	NewDB,
+	NewCache,
 	//NewIndustrialDataClient,
 
 	NewControlNetRepo,
 	NewProductNetRepo,
+	NewAuditLogRepo,
+	NewCollectorRepo,
+	NewModuleRelationRepo,
 )
+
+const defaultCacheSize = 1024000000 // 100MB
 
 // Data .
 type Data struct {
-	log *log.Helper
-	db  *gorm.DB
+	log   *log.Helper
+	db    *gorm.DB
+	cache cache.Cache
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewData(c *conf.Data, db *gorm.DB, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
-	return &Data{}, cleanup, nil
+	return &Data{
+		db: db,
+	}, cleanup, nil
 }
 
 func NewDB(c *conf.Data, logger log.Logger) *gorm.DB {
@@ -76,4 +86,13 @@ func NewIndustrialDataClient(c *conf.Data, logger log.Logger) platform.Industria
 	}
 	client := platform.NewIndustrialDataHTTPClient(conn)
 	return client
+}
+
+func NewCache(c *conf.Data) cache.Cache {
+	size := defaultCacheSize
+	if c.GetCache() != nil || c.GetCache().GetSize() > 0 {
+		size = (int)(c.GetCache().GetSize())
+	}
+
+	return cache.NewCache(size)
 }

@@ -175,7 +175,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 		Data: &pb.VarReplyData{
 			List: []*pb.VarDetail{
 				{
-					Name:      "UPPER_FIC40013",
+					Name:      "AI400011",
 					Desc:      "丙烯出入口化验分析值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -184,7 +184,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "Kg/h",
 				},
 				{
-					Name:      "UPPER_H_ALK",
+					Name:      "AI400012",
 					Desc:      "丙烷出入口化验分析值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -193,7 +193,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "mol/mol",
 				},
 				{
-					Name:      "LOWER_FIC40013",
+					Name:      "AI400013",
 					Desc:      "丙二烯出入口化验分析值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -202,7 +202,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "Kg/h",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400014",
 					Desc:      "甲基乙炔出入口化验分析值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -211,7 +211,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "Kg/h",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400015",
 					Desc:      "C3流量人工录入值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -220,7 +220,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "Kg/h",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400016",
 					Desc:      "甲基乙炔出入口化验分析值",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -229,7 +229,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "Kg/h",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400017",
 					Desc:      "选择性",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -238,7 +238,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "%",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400018",
 					Desc:      "转化率",
 					RealValue: 123.45,
 					SetValue:  200.00,
@@ -247,7 +247,7 @@ func (s *ProductNetService) GetCatalyst(ctx context.Context, req *pb.CatalystReq
 					Unit:      "%",
 				},
 				{
-					Name:      "TOTAL_H2_FLOW",
+					Name:      "AI400019",
 					Desc:      "丙烯增量",
 					RealValue: 123.45,
 					SetValue:  200.00,

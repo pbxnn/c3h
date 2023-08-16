@@ -1,0 +1,296 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "product_net/product_net.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ProductNet"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/c3h/product-net/catalyst": {
+      "get": {
+        "operationId": "ProductNet_GetCatalyst",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netCatalystReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/confounding-vars": {
+      "get": {
+        "operationId": "ProductNet_GetConfoundingVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netConfoundingVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/control-vars": {
+      "get": {
+        "operationId": "ProductNet_GetControlVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netControlVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/controlled-vars": {
+      "get": {
+        "operationId": "ProductNet_GetControlledVars",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netControlledVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    },
+    "/c3h/product-net/switch": {
+      "get": {
+        "operationId": "ProductNet_GetSwitchInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/product_netSwitchReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ProductNet"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiproduct_netVarDetail": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "real_value": {
+          "type": "number",
+          "format": "double"
+        },
+        "set_value": {
+          "type": "number",
+          "format": "double"
+        },
+        "low_limit": {
+          "type": "number",
+          "format": "double"
+        },
+        "high_limit": {
+          "type": "number",
+          "format": "double"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
+    "apiproduct_netVarReplyData": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiproduct_netVarDetail"
+          }
+        }
+      }
+    },
+    "product_netCatalystReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apiproduct_netVarReplyData"
+        }
+      }
+    },
+    "product_netConfoundingVarReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apiproduct_netVarReplyData"
+        }
+      }
+    },
+    "product_netControlVarReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apiproduct_netVarReplyData"
+        }
+      }
+    },
+    "product_netControlledVarReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/apiproduct_netVarReplyData"
+        }
+      }
+    },
+    "product_netSwitchDetail": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "product_netSwitchReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/product_netSwitchReplyData"
+        }
+      }
+    },
+    "product_netSwitchReplyData": {
+      "type": "object",
+      "properties": {
+        "DC_402_Total": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        },
+        "DC_402_Manual": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        },
+        "DC_402_AB": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        },
+        "MAPD_export": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        },
+        "drier": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        },
+        "communication": {
+          "$ref": "#/definitions/product_netSwitchDetail"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

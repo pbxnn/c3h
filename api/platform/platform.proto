@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package api.platform;
+
+import "google/api/annotations.proto";
+
+option go_package = "c3h/api/platform;platform";
+
+service ProductNet {
+  rpc CollectData (CollectDataRequest) returns (CollectDataReply) {
+    option (google.api.http) = {
+      get: "/c3h/platform/collect-data"
+    };
+  }
+}
+
+message CollectDataRequest{}
+message CollectDataReply{}

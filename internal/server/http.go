@@ -3,6 +3,7 @@ package server
 import (
 	"c3h/api/control_net"
 	"c3h/api/product_net"
+	"c3h/internal/biz"
 	"c3h/internal/conf"
 	"c3h/internal/service"
 	"context"
@@ -16,17 +17,22 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/swagger-api/openapiv2"
 	"github.com/gorilla/handlers"
-	"gorm.io/gorm"
+	"go.opentelemetry.io/otel"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bc *conf.Bootstrap, db *gorm.DB, cn *service.ControlNetService, pn *service.ProductNetService, logger log.Logger) *http.Server {
+func NewHTTPServer(bc *conf.Bootstrap, alu *biz.AuditLogUsecase, cn *service.ControlNetService, pn *service.ProductNetService, logger log.Logger) *http.Server {
+
+	initTracer()
+
 	var opts = []http.ServerOption{
-		NewMiddleware(bc.Auth, db, logger),
+		NewMiddleware(alu, logger),
 		http.Filter(handlers.CORS(
+			handlers.AllowCredentials(),
 			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedHeaders([]string{"*"}),
-			handlers.AllowedMethods([]string{"GET", "POST"}),
+			handlers.AllowedHeaders([]string{"Content-Type", "Accept", "Refer", "Sec-Ch-Ua", "Sec-Ch-Ua-Mobile", "Sec-Ch-Ua-Platform", "User-Agent"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "HEAD", "DELETE"}),
 		)),
 		//http.ResponseEncoder(encoder.ResponseEncoder),
 		//http.ErrorEncoder(encoder.ErrorEncoder),
@@ -54,7 +60,7 @@ func NewHTTPServer(bc *conf.Bootstrap, db *gorm.DB, cn *service.ControlNetServic
 }
 
 // NewMiddleware 创建中间件
-func NewMiddleware(ac *conf.Auth, db *gorm.DB, logger log.Logger) http.ServerOption {
+func NewMiddleware(alu *biz.AuditLogUsecase, logger log.Logger) http.ServerOption {
 	//m, err := model.NewModelFromFile(ac.Model)
 	//if err != nil {
 	//	panic(err)
@@ -69,6 +75,7 @@ func NewMiddleware(ac *conf.Auth, db *gorm.DB, logger log.Logger) http.ServerOpt
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
+		AuditLog(alu),
 		//selector.Server(
 		//	auth.Login(),
 		//	auth.Casbin(
@@ -96,4 +103,27 @@ func NewWhiteListMatcher(ac *conf.Auth) selector.MatchFunc {
 
 		return true
 	}
+}
+
+// 设置全局trace
+func initTracer() {
+	//// 创建 Jaeger exporter
+	//exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	//if err != nil {
+	//	return err
+	//}
+	tp := tracesdk.NewTracerProvider(
+	//// 将基于父span的采样率设置为100%
+	//tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.TraceIDRatioBased(1.0))),
+	//// 始终确保在生产中批量处理
+	//tracesdk.WithBatcher(exp),
+	//// 在资源中记录有关此应用程序的信息
+	//tracesdk.WithResource(resource.NewSchemaless(
+	//	semconv.ServiceNameKey.String("kratos-trace"),
+	//	attribute.String("exporter", "jaeger"),
+	//	attribute.Float64("float", 312.23),
+	//)),
+	)
+
+	otel.SetTracerProvider(tp)
 }

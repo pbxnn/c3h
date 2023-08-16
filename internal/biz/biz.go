@@ -6,4 +6,5 @@ import "github.com/google/wire"
 var BProviderSet = wire.NewSet(
 	NewProductNetUsecase,
 	NewControlNetUsecase,
+	NewAuditLogUsecase,
 )

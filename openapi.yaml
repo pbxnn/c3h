@@ -7,6 +7,17 @@ info:
     version: 0.0.1
 paths:
     /c3h/control-net/operation-vars:
+        get:
+            tags:
+                - ControlNet
+            operationId: ControlNet_GetOperationVars
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_net.GetOperationVarsReply'
         post:
             tags:
                 - ControlNet
@@ -25,6 +36,17 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/api.control_net.SetOperationVarsReply'
     /c3h/control-net/r401-apc:
+        get:
+            tags:
+                - ControlNet
+            operationId: ControlNet_GetR401APC
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.control_net.GetR401Reply'
         post:
             tags:
                 - ControlNet
@@ -71,30 +93,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.control_net.ConfirmReactorPerfReply'
-    /c3h/industrial/all:
+    /c3h/control-net/reactor-performance:
         get:
             tags:
-                - IndustrialData
-            operationId: IndustrialData_GetAllData
+                - ControlNet
+            operationId: ControlNet_GetReactorPerformance
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.GetAllDataReply'
-    /c3h/industrial/controller:
+                                $ref: '#/components/schemas/api.control_net.GetReactorPerformanceReply'
+    /c3h/platform/collect-data:
         get:
             tags:
-                - IndustrialData
-            operationId: IndustrialData_GetControllerData
+                - ProductNet
+            operationId: ProductNet_CollectData
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/.GetControllerDataReply'
+                                $ref: '#/components/schemas/api.platform.CollectDataReply'
     /c3h/product-net/catalyst:
         get:
             tags:
@@ -155,89 +177,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.SwitchReply'
-    /c3h/user/info:
-        get:
-            tags:
-                - User
-            operationId: User_GetUser
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.GetUserReply'
-    /c3h/user/login:
-        post:
-            tags:
-                - User
-            operationId: User_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/.LoginRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.LoginReply'
-    /c3h/user/logout:
-        post:
-            tags:
-                - User
-            operationId: User_Logout
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/.LogoutRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/.LogoutReply'
 components:
     schemas:
-        .GetAllDataReply:
-            type: object
-            properties: {}
-        .GetControllerDataReply:
-            type: object
-            properties:
-                controllerMode:
-                    type: string
-                switchStatus:
-                    type: string
-                communicationStatus:
-                    type: string
-        .GetUserReply:
-            type: object
-            properties: {}
-        .LoginReply:
-            type: object
-            properties: {}
-        .LoginRequest:
-            type: object
-            properties: {}
-        .LogoutReply:
-            type: object
-            properties: {}
-        .LogoutRequest:
-            type: object
-            properties: {}
         api.control_net.ConfirmReactorPerfReply:
             type: object
             properties: {}
         api.control_net.ConfirmReactorPerfRequest:
             type: object
             properties: {}
+        api.control_net.GetOperationVarsReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.control_net.VarReplyData'
+        api.control_net.GetR401Reply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.control_net.VarReplyData'
         api.control_net.GetReactorPerfReply:
             type: object
             properties:
@@ -247,6 +210,14 @@ components:
                     type: string
                 c3h8:
                     type: string
+        api.control_net.GetReactorPerformanceReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.control_net.VarReplyData'
         api.control_net.SetOperationVarsReply:
             type: object
             properties: {}
@@ -263,22 +234,55 @@ components:
                     type: string
         api.control_net.SetR401APCReply:
             type: object
-            properties: {}
+            properties:
+                code:
+                    type: integer
+                    format: int32
         api.control_net.SetR401APCRequest:
             type: object
             properties:
-                MAPDControlMode:
-                    type: integer
-                    format: int32
-                APCSwitch:
-                    type: integer
-                    format: int32
-                APCWrite:
-                    type: integer
-                    format: int32
-                communicationLight:
-                    type: integer
-                    format: int32
+                name:
+                    type: string
+                setValue:
+                    type: number
+                    format: double
+        api.control_net.VarDetail:
+            type: object
+            properties:
+                name:
+                    type: string
+                desc:
+                    type: string
+                realValue:
+                    type: number
+                    format: double
+                setValue:
+                    type: number
+                    format: double
+                lowLimit:
+                    type: number
+                    format: double
+                highLimit:
+                    type: number
+                    format: double
+                unit:
+                    type: string
+                editAble:
+                    type: boolean
+                isSwitch:
+                    type: boolean
+                switchStatus:
+                    type: boolean
+        api.control_net.VarReplyData:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.control_net.VarDetail'
+        api.platform.CollectDataReply:
+            type: object
+            properties: {}
         api.product_net.CatalystReply:
             type: object
             properties:
@@ -371,6 +375,5 @@ components:
                         $ref: '#/components/schemas/api.product_net.VarDetail'
 tags:
     - name: ControlNet
-    - name: IndustrialData
     - name: ProductNet
-    - name: User
+    - name: ProductNet

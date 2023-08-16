@@ -12,6 +12,7 @@ message Bootstrap {
   Data   data    = 4;
   Log    log     = 5;
   Auth   auth    = 6;
+  Job    job     = 7;
 }
 
 message Server {
@@ -34,11 +35,8 @@ message Data {
     string driver = 1;
     string source = 2;
   }
-  message Redis {
-    string                   network       = 1;
-    string                   addr          = 2;
-    google.protobuf.Duration read_timeout  = 3;
-    google.protobuf.Duration write_timeout = 4;
+  message Cache {
+    int32 size = 1;
   }
   message IndustrialApi {
     string addr = 1;
@@ -47,7 +45,7 @@ message Data {
     string addr = 1;
   }
   Database      database       = 1;
-  Redis         redis          = 2;
+  Cache         cache          = 2;
   IndustrialApi industrial_api = 3;
   UserApi       user_api       = 4;
 }
@@ -79,4 +77,8 @@ message Auth {
     string driver     = 1;
     string datasource = 2;
   }
+}
+
+message Job {
+  map<string, string> schedule = 1;
 }
