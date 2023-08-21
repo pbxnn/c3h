@@ -35,6 +35,7 @@ func NewHTTPServer(bc *conf.Bootstrap, alu *biz.AuditLogUsecase, cn *service.Con
 			handlers.AllowedHeaders([]string{"Content-Type", "Accept", "Refer", "Sec-Ch-Ua", "Sec-Ch-Ua-Mobile", "Sec-Ch-Ua-Platform", "User-Agent"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "HEAD", "DELETE"}),
 		)),
+		http.Timeout(bc.Server.Http.Timeout.AsDuration()),
 		//http.ResponseEncoder(encoder.ResponseEncoder),
 		//http.ErrorEncoder(encoder.ErrorEncoder),
 	}

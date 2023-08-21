@@ -80,6 +80,7 @@ generate:
 # generate all
 all:
 	make api;
+	make swagger;
 	make config;
 	make generate;
 

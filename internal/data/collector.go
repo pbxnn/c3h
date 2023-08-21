@@ -16,10 +16,10 @@ type collectorRepo struct {
 	logger *log.Helper
 	db     *gorm.DB
 	cache  cache.Cache
-	mr     *ModuleRelationRepo
+	mr     biz.ModuleRelationRepo
 }
 
-func NewCollectorRepo(mr *ModuleRelationRepo, db *gorm.DB, cache cache.Cache, logger log.Logger) biz.CollectRepo {
+func NewCollectorRepo(mr biz.ModuleRelationRepo, db *gorm.DB, cache cache.Cache, logger log.Logger) biz.CollectRepo {
 	return &collectorRepo{
 		logger: log.NewHelper(log.With(logger, "module", "collector-repo")),
 		db:     db,

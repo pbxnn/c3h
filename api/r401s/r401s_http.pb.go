@@ -20,29 +20,32 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationR401SConfirmReactorPerf = "/api.r401s.R401S/ConfirmReactorPerf"
+const OperationR401SGetAPCControl = "/api.r401s.R401S/GetAPCControl"
 const OperationR401SGetConfoundingVars = "/api.r401s.R401S/GetConfoundingVars"
 const OperationR401SGetOperationVars = "/api.r401s.R401S/GetOperationVars"
 const OperationR401SGetReactorPerformance = "/api.r401s.R401S/GetReactorPerformance"
 const OperationR401SGetStatusVars = "/api.r401s.R401S/GetStatusVars"
-const OperationR401SGetSwitchInfo = "/api.r401s.R401S/GetSwitchInfo"
 const OperationR401SReset = "/api.r401s.R401S/Reset"
-const OperationR401SSetSwitchInfo = "/api.r401s.R401S/SetSwitchInfo"
+const OperationR401SSetAPCControl = "/api.r401s.R401S/SetAPCControl"
+const OperationR401SSetControlSwitch = "/api.r401s.R401S/SetControlSwitch"
 
 type R401SHTTPServer interface {
-	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*ConfirmReactorPerfReply, error)
+	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error)
+	GetAPCControl(context.Context, *GetAPCControlRequest) (*VarListReply, error)
 	GetConfoundingVars(context.Context, *GetConfoundingVarsRequest) (*VarListReply, error)
 	GetOperationVars(context.Context, *GetOperationVarsRequest) (*VarListReply, error)
 	GetReactorPerformance(context.Context, *GetReactorPerformanceRequest) (*VarListReply, error)
 	GetStatusVars(context.Context, *GetStatusVarsRequest) (*VarListReply, error)
-	GetSwitchInfo(context.Context, *GetSwitchInfoRequest) (*VarListReply, error)
 	Reset(context.Context, *ResetRequest) (*VarReply, error)
-	SetSwitchInfo(context.Context, *SetSwitchInfoRequest) (*VarReply, error)
+	SetAPCControl(context.Context, *SetAPCControlRequest) (*VarReply, error)
+	SetControlSwitch(context.Context, *SetControlSwitchRequest) (*VarReply, error)
 }
 
 func RegisterR401SHTTPServer(s *http.Server, srv R401SHTTPServer) {
 	r := s.Route("/")
-	r.GET("/c3h/r401s/switch", _R401S_GetSwitchInfo1_HTTP_Handler(srv))
-	r.POST("/c3h/r401s/switch", _R401S_SetSwitchInfo0_HTTP_Handler(srv))
+	r.GET("/c3h/r401s/apc-control", _R401S_GetAPCControl0_HTTP_Handler(srv))
+	r.POST("/c3h/r401s/apc-control", _R401S_SetAPCControl0_HTTP_Handler(srv))
+	r.POST("/c3h/r401s/control-switch", _R401S_SetControlSwitch0_HTTP_Handler(srv))
 	r.POST("/c3h/r401s/reset", _R401S_Reset0_HTTP_Handler(srv))
 	r.GET("/c3h/r401s/operation-vars", _R401S_GetOperationVars0_HTTP_Handler(srv))
 	r.GET("/c3h/r401s/status-vars", _R401S_GetStatusVars0_HTTP_Handler(srv))
@@ -51,15 +54,15 @@ func RegisterR401SHTTPServer(s *http.Server, srv R401SHTTPServer) {
 	r.POST("/c3h/r401s/reactor-perf", _R401S_ConfirmReactorPerf0_HTTP_Handler(srv))
 }
 
-func _R401S_GetSwitchInfo1_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
+func _R401S_GetAPCControl0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetSwitchInfoRequest
+		var in GetAPCControlRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationR401SGetSwitchInfo)
+		http.SetOperation(ctx, OperationR401SGetAPCControl)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetSwitchInfo(ctx, req.(*GetSwitchInfoRequest))
+			return srv.GetAPCControl(ctx, req.(*GetAPCControlRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -70,15 +73,34 @@ func _R401S_GetSwitchInfo1_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Conte
 	}
 }
 
-func _R401S_SetSwitchInfo0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
+func _R401S_SetAPCControl0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in SetSwitchInfoRequest
+		var in SetAPCControlRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationR401SSetSwitchInfo)
+		http.SetOperation(ctx, OperationR401SSetAPCControl)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SetSwitchInfo(ctx, req.(*SetSwitchInfoRequest))
+			return srv.SetAPCControl(ctx, req.(*SetAPCControlRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*VarReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _R401S_SetControlSwitch0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SetControlSwitchRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationR401SSetControlSwitch)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SetControlSwitch(ctx, req.(*SetControlSwitchRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -198,20 +220,21 @@ func _R401S_ConfirmReactorPerf0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.
 		if err != nil {
 			return err
 		}
-		reply := out.(*ConfirmReactorPerfReply)
+		reply := out.(*VarListReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type R401SHTTPClient interface {
-	ConfirmReactorPerf(ctx context.Context, req *ConfirmReactorPerfRequest, opts ...http.CallOption) (rsp *ConfirmReactorPerfReply, err error)
+	ConfirmReactorPerf(ctx context.Context, req *ConfirmReactorPerfRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
+	GetAPCControl(ctx context.Context, req *GetAPCControlRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetConfoundingVars(ctx context.Context, req *GetConfoundingVarsRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetOperationVars(ctx context.Context, req *GetOperationVarsRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetReactorPerformance(ctx context.Context, req *GetReactorPerformanceRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetStatusVars(ctx context.Context, req *GetStatusVarsRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
-	GetSwitchInfo(ctx context.Context, req *GetSwitchInfoRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	Reset(ctx context.Context, req *ResetRequest, opts ...http.CallOption) (rsp *VarReply, err error)
-	SetSwitchInfo(ctx context.Context, req *SetSwitchInfoRequest, opts ...http.CallOption) (rsp *VarReply, err error)
+	SetAPCControl(ctx context.Context, req *SetAPCControlRequest, opts ...http.CallOption) (rsp *VarReply, err error)
+	SetControlSwitch(ctx context.Context, req *SetControlSwitchRequest, opts ...http.CallOption) (rsp *VarReply, err error)
 }
 
 type R401SHTTPClientImpl struct {
@@ -222,13 +245,26 @@ func NewR401SHTTPClient(client *http.Client) R401SHTTPClient {
 	return &R401SHTTPClientImpl{client}
 }
 
-func (c *R401SHTTPClientImpl) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...http.CallOption) (*ConfirmReactorPerfReply, error) {
-	var out ConfirmReactorPerfReply
+func (c *R401SHTTPClientImpl) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...http.CallOption) (*VarListReply, error) {
+	var out VarListReply
 	pattern := "/c3h/r401s/reactor-perf"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationR401SConfirmReactorPerf))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *R401SHTTPClientImpl) GetAPCControl(ctx context.Context, in *GetAPCControlRequest, opts ...http.CallOption) (*VarListReply, error) {
+	var out VarListReply
+	pattern := "/c3h/r401s/apc-control"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationR401SGetAPCControl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -287,19 +323,6 @@ func (c *R401SHTTPClientImpl) GetStatusVars(ctx context.Context, in *GetStatusVa
 	return &out, err
 }
 
-func (c *R401SHTTPClientImpl) GetSwitchInfo(ctx context.Context, in *GetSwitchInfoRequest, opts ...http.CallOption) (*VarListReply, error) {
-	var out VarListReply
-	pattern := "/c3h/r401s/switch"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationR401SGetSwitchInfo))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *R401SHTTPClientImpl) Reset(ctx context.Context, in *ResetRequest, opts ...http.CallOption) (*VarReply, error) {
 	var out VarReply
 	pattern := "/c3h/r401s/reset"
@@ -313,11 +336,24 @@ func (c *R401SHTTPClientImpl) Reset(ctx context.Context, in *ResetRequest, opts 
 	return &out, err
 }
 
-func (c *R401SHTTPClientImpl) SetSwitchInfo(ctx context.Context, in *SetSwitchInfoRequest, opts ...http.CallOption) (*VarReply, error) {
+func (c *R401SHTTPClientImpl) SetAPCControl(ctx context.Context, in *SetAPCControlRequest, opts ...http.CallOption) (*VarReply, error) {
 	var out VarReply
-	pattern := "/c3h/r401s/switch"
+	pattern := "/c3h/r401s/apc-control"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationR401SSetSwitchInfo))
+	opts = append(opts, http.Operation(OperationR401SSetAPCControl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *R401SHTTPClientImpl) SetControlSwitch(ctx context.Context, in *SetControlSwitchRequest, opts ...http.CallOption) (*VarReply, error) {
+	var out VarReply
+	pattern := "/c3h/r401s/control-switch"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationR401SSetControlSwitch))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

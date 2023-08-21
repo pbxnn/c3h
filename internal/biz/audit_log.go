@@ -1,7 +1,6 @@
 package biz
 
 import (
-	"c3h/api/control_net"
 	"c3h/api/platform"
 	"c3h/api/r401s"
 	"c3h/internal/data/dao"
@@ -18,11 +17,12 @@ import (
 
 // http请求相关操作类型（1-1000）
 const (
-	OpSetR401Apc = iota + 1
-	OpSetOperationVars
-	OpConfirmReactorPerformance
+	_ = iota
 
 	OpR401SConfirmReactorPerformance
+	OpR401SResetOperationVar
+	OpR401SSetAPCControl
+	OpR401SSetOperationControlSwitch
 )
 
 // cron job相关操作类型（1001-2000）
@@ -32,11 +32,12 @@ const (
 
 // http请求相关资源类型（1-1000）
 const (
-	ResourceR401Apc = iota + 1
-	ResourceOperationVars
-	ResourceReactorPerformance
+	_ = iota
 
 	ResourceR401SReactorPerformance
+	ResourceR401SResetOperationVar
+	ResourceR401SSetOperationControlSwitch
+	ResourceR401SSetAPCControl
 )
 
 // cron job相关资源类型（1001-2000）
@@ -45,21 +46,21 @@ const (
 )
 
 var operationMap = map[string]uint{
-	control_net.OperationControlNetSetR401APC:         OpSetR401Apc,
-	control_net.OperationControlNetSetOperationVars:   OpSetOperationVars,
-	control_net.OperationControlNetConfirmReactorPerf: OpConfirmReactorPerformance,
 
 	r401s.OperationR401SConfirmReactorPerf: OpR401SConfirmReactorPerformance,
+	r401s.OperationR401SReset:              OpR401SResetOperationVar,
+	r401s.OperationR401SSetControlSwitch:   OpR401SSetOperationControlSwitch,
+	r401s.OperationR401SSetAPCControl:      OpR401SSetAPCControl,
 
 	platform.OperationProductNetCollectData: OperationCollectData,
 }
 
 var resourceMap = map[string]uint{
-	control_net.OperationControlNetSetR401APC:         ResourceR401Apc,
-	control_net.OperationControlNetSetOperationVars:   ResourceOperationVars,
-	control_net.OperationControlNetConfirmReactorPerf: ResourceReactorPerformance,
 
 	r401s.OperationR401SConfirmReactorPerf: ResourceR401SReactorPerformance,
+	r401s.OperationR401SReset:              ResourceR401SResetOperationVar,
+	r401s.OperationR401SSetControlSwitch:   OpR401SSetOperationControlSwitch,
+	r401s.OperationR401SSetAPCControl:      OpR401SSetAPCControl,
 
 	platform.OperationProductNetCollectData: ResourceCollectData,
 }

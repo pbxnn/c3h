@@ -77,40 +77,85 @@ func NewR401SService(uc *biz.R401SUsecase, logger log.Logger) *R401SService {
 	}
 }
 
-func (s *R401SService) GetSwitchInfo(ctx context.Context, req *pb.GetSwitchInfoRequest) (*pb.VarListReply, error) {
+func (s *R401SService) GetAPCControl(ctx context.Context, req *pb.GetAPCControlRequest) (*pb.VarListReply, error) {
 	list, err := s.uc.GetVarsByModule(ctx, R401SSwitchModuleKey)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
-	for _, item := range list {
-		varDetail := &pb.VarDetail{
-			Name:      item.Name,
-			Key:       item.Key,
-			Desc:      item.Desc,
-			Type:      int32(item.Type),
-			RealValue: item.RealValue,
-			SetValue:  item.SetValue,
-			Extra:     &pb.VarDetailExtra{},
-		}
+	resp := &pb.VarListReply{
+		Code: 20000,
+		Data: &pb.VarReplyData{
+			List: s.formatVarDetailList(list),
+		},
+	}
 
-		if _, ok := editAbleVarMap[item.Key]; ok {
-			varDetail.Extra.EditAble = true
-		}
+	return resp, nil
 
-		resp.Data.List = append(resp.Data.List, varDetail)
+	//resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
+	//for _, item := range list {
+	//	varDetail := &pb.VarDetail{
+	//		Name:      item.Name,
+	//		Key:       item.Key,
+	//		Desc:      item.Desc,
+	//		Type:      int32(item.Type),
+	//		RealValue: item.RealValue,
+	//		SetValue:  item.SetValue,
+	//		Extra:     &pb.VarDetailExtra{},
+	//	}
+	//
+	//	if _, ok := editAbleVarMap[item.Key]; ok {
+	//		varDetail.Extra.EditAble = true
+	//	}
+	//
+	//	resp.Data.List = append(resp.Data.List, varDetail)
+	//}
+	//
+	//return resp, nil
+}
+
+func (s *R401SService) SetAPCControl(ctx context.Context, req *pb.SetAPCControlRequest) (*pb.VarReply, error) {
+
+	item, err := s.uc.UpdateSwitchStatus(ctx, req.Key, req.SetValue)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &pb.VarReply{
+		Code: 20000,
+		Data: s.formatVarDetail(item, map[string]*dao.DataInfo{}),
 	}
 
 	return resp, nil
 }
 
-func (s *R401SService) SetSwitchInfo(ctx context.Context, req *pb.SetSwitchInfoRequest) (*pb.VarReply, error) {
-	return &pb.VarReply{}, nil
+func (s *R401SService) SetControlSwitch(ctx context.Context, req *pb.SetControlSwitchRequest) (*pb.VarReply, error) {
+	controlKey := controlSwitchMap[req.Key]
+	list, err := s.uc.UpdateControlSwitchStatus(ctx, req.Key, controlKey, req.Status)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &pb.VarReply{
+		Code: 20000,
+		Data: s.formatVarDetailList(list)[0],
+	}
+
+	return resp, nil
 }
 
 func (s *R401SService) Reset(ctx context.Context, req *pb.ResetRequest) (*pb.VarReply, error) {
-	return &pb.VarReply{}, nil
+	item, err := s.uc.ResetVar(ctx, req.Key)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &pb.VarReply{
+		Code: 20000,
+		Data: s.formatVarDetail(item, map[string]*dao.DataInfo{}),
+	}
+
+	return resp, nil
 }
 
 func (s *R401SService) GetOperationVars(ctx context.Context, req *pb.GetOperationVarsRequest) (*pb.VarListReply, error) {
@@ -119,43 +164,58 @@ func (s *R401SService) GetOperationVars(ctx context.Context, req *pb.GetOperatio
 		return nil, err
 	}
 
-	resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
-	controlSwitchInfoMap := map[string]*dao.DataInfo{}
-	for idx, item := range list {
-		if item.Type == VarTypeControlSwitch {
-			controlSwitchInfoMap[item.Key] = list[idx]
-			continue
-		}
-
-		varDetail := &pb.VarDetail{
-			Name:      item.Name,
-			Key:       item.Key,
-			Desc:      item.Desc,
-			Type:      int32(item.Type),
-			RealValue: item.RealValue,
-			SetValue:  item.SetValue,
-			CalcValue: item.CalcValue,
-			LowLimit:  item.LowLimit,
-			HighLimit: item.HighLimit,
-			Unit:      item.Unit,
-			Extra:     &pb.VarDetailExtra{},
-		}
-
-		if _, ok := resetAbleVarMap[item.Key]; ok {
-			varDetail.Extra.ResetAble = true
-		}
-
-		if _, ok := controlSwitchMap[item.Key]; ok {
-			if v, ok := controlSwitchInfoMap[item.Key]; ok {
-				varDetail.Extra.HasControlSwitch = true
-				varDetail.Extra.ControlSwithStatus = int32(v.RealValue)
-			}
-		}
-
-		resp.Data.List = append(resp.Data.List, varDetail)
+	resp := &pb.VarListReply{
+		Code: 20000,
+		Data: &pb.VarReplyData{
+			List: s.formatVarDetailList(list),
+		},
 	}
 
 	return resp, nil
+
+	//controlSwitchInfoMap := map[string]*dao.DataInfo{}
+	//for idx, item := range list {
+	//	if item.Type == VarTypeControlSwitch {
+	//		controlSwitchInfoMap[item.Key] = list[idx]
+	//		continue
+	//	}
+	//}
+	//
+	//for idx, item := range list {
+	//	if item.Type == VarTypeControlSwitch {
+	//		controlSwitchInfoMap[item.Key] = list[idx]
+	//		continue
+	//	}
+	//
+	//	varDetail := &pb.VarDetail{
+	//		Name:      item.Name,
+	//		Key:       item.Key,
+	//		Desc:      item.Desc,
+	//		Type:      int32(item.Type),
+	//		RealValue: item.RealValue,
+	//		SetValue:  item.SetValue,
+	//		CalcValue: item.CalcValue,
+	//		LowLimit:  item.LowLimit,
+	//		HighLimit: item.HighLimit,
+	//		Unit:      item.Unit,
+	//		Extra:     &pb.VarDetailExtra{},
+	//	}
+	//
+	//	if _, ok := resetAbleVarMap[item.Key]; ok {
+	//		varDetail.Extra.ResetAble = true
+	//	}
+	//
+	//	if k, ok := controlSwitchMap[item.Key]; ok {
+	//		if v, ok := controlSwitchInfoMap[k]; ok {
+	//			varDetail.Extra.HasControlSwitch = true
+	//			varDetail.Extra.ControlSwitchStatus = int32(v.RealValue)
+	//		}
+	//	}
+	//
+	//	resp.Data.List = append(resp.Data.List, varDetail)
+	//}
+	//
+	//return resp, nil
 }
 
 func (s *R401SService) GetConfoundingVars(ctx context.Context, req *pb.GetConfoundingVarsRequest) (*pb.VarListReply, error) {
@@ -164,24 +224,33 @@ func (s *R401SService) GetConfoundingVars(ctx context.Context, req *pb.GetConfou
 		return nil, err
 	}
 
-	resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
-	for _, item := range list {
-		varDetail := &pb.VarDetail{
-			Name:      item.Name,
-			Key:       item.Key,
-			Desc:      item.Desc,
-			Type:      int32(item.Type),
-			RealValue: item.RealValue,
-			SetValue:  item.SetValue,
-			LowLimit:  item.LowLimit,
-			HighLimit: item.HighLimit,
-			Unit:      item.Unit,
-		}
-
-		resp.Data.List = append(resp.Data.List, varDetail)
+	resp := &pb.VarListReply{
+		Code: 20000,
+		Data: &pb.VarReplyData{
+			List: s.formatVarDetailList(list),
+		},
 	}
 
 	return resp, nil
+
+	//resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
+	//for _, item := range list {
+	//	varDetail := &pb.VarDetail{
+	//		Name:      item.Name,
+	//		Key:       item.Key,
+	//		Desc:      item.Desc,
+	//		Type:      int32(item.Type),
+	//		RealValue: item.RealValue,
+	//		SetValue:  item.SetValue,
+	//		LowLimit:  item.LowLimit,
+	//		HighLimit: item.HighLimit,
+	//		Unit:      item.Unit,
+	//	}
+	//
+	//	resp.Data.List = append(resp.Data.List, varDetail)
+	//}
+	//
+	//return resp, nil
 }
 
 func (s *R401SService) GetStatusVars(ctx context.Context, req *pb.GetStatusVarsRequest) (*pb.VarListReply, error) {
@@ -190,24 +259,33 @@ func (s *R401SService) GetStatusVars(ctx context.Context, req *pb.GetStatusVarsR
 		return nil, err
 	}
 
-	resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
-	for _, item := range list {
-		varDetail := &pb.VarDetail{
-			Name:      item.Name,
-			Key:       item.Key,
-			Desc:      item.Desc,
-			Type:      int32(item.Type),
-			RealValue: item.RealValue,
-			SetValue:  item.SetValue,
-			LowLimit:  item.LowLimit,
-			HighLimit: item.HighLimit,
-			Unit:      item.Unit,
-		}
-
-		resp.Data.List = append(resp.Data.List, varDetail)
+	resp := &pb.VarListReply{
+		Code: 20000,
+		Data: &pb.VarReplyData{
+			List: s.formatVarDetailList(list),
+		},
 	}
 
 	return resp, nil
+
+	//resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
+	//for _, item := range list {
+	//	varDetail := &pb.VarDetail{
+	//		Name:      item.Name,
+	//		Key:       item.Key,
+	//		Desc:      item.Desc,
+	//		Type:      int32(item.Type),
+	//		RealValue: item.RealValue,
+	//		SetValue:  item.SetValue,
+	//		LowLimit:  item.LowLimit,
+	//		HighLimit: item.HighLimit,
+	//		Unit:      item.Unit,
+	//	}
+	//
+	//	resp.Data.List = append(resp.Data.List, varDetail)
+	//}
+	//
+	//return resp, nil
 }
 
 func (s *R401SService) GetReactorPerformance(ctx context.Context, req *pb.GetReactorPerformanceRequest) (*pb.VarListReply, error) {
@@ -216,26 +294,90 @@ func (s *R401SService) GetReactorPerformance(ctx context.Context, req *pb.GetRea
 		return nil, err
 	}
 
-	resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
-	for _, item := range list {
-		varDetail := &pb.VarDetail{
-			Name:      item.Name,
-			Key:       item.Key,
-			Desc:      item.Desc,
-			Type:      int32(item.Type),
-			RealValue: item.RealValue,
-			SetValue:  item.SetValue,
-			LowLimit:  item.LowLimit,
-			HighLimit: item.HighLimit,
-			Unit:      item.Unit,
-		}
-
-		resp.Data.List = append(resp.Data.List, varDetail)
+	resp := &pb.VarListReply{
+		Code: 20000,
+		Data: &pb.VarReplyData{
+			List: s.formatVarDetailList(list),
+		},
 	}
 
 	return resp, nil
+
+	//resp := &pb.VarListReply{Code: 20000, Data: &pb.VarReplyData{}}
+	//for _, item := range list {
+	//	varDetail := &pb.VarDetail{
+	//		Name:      item.Name,
+	//		Key:       item.Key,
+	//		Desc:      item.Desc,
+	//		Type:      int32(item.Type),
+	//		RealValue: item.RealValue,
+	//		SetValue:  item.SetValue,
+	//		LowLimit:  item.LowLimit,
+	//		HighLimit: item.HighLimit,
+	//		Unit:      item.Unit,
+	//	}
+	//
+	//	resp.Data.List = append(resp.Data.List, varDetail)
+	//}
+	//
+	//return resp, nil
 }
 
-func (s *R401SService) ConfirmReactorPerf(ctx context.Context, req *pb.ConfirmReactorPerfRequest) (*pb.ConfirmReactorPerfReply, error) {
-	return &pb.ConfirmReactorPerfReply{}, nil
+func (s *R401SService) ConfirmReactorPerf(ctx context.Context, req *pb.ConfirmReactorPerfRequest) (*pb.VarListReply, error) {
+
+	return &pb.VarListReply{
+		Code: 20000,
+	}, nil
+}
+
+func (s *R401SService) formatVarDetail(item *dao.DataInfo, controlSwitchInfoMap map[string]*dao.DataInfo) *pb.VarDetail {
+
+	varDetail := &pb.VarDetail{
+		Name:      item.Name,
+		Key:       item.Key,
+		Desc:      item.Desc,
+		Type:      int32(item.Type),
+		RealValue: item.RealValue,
+		SetValue:  item.SetValue,
+		CalcValue: item.CalcValue,
+		LowLimit:  item.LowLimit,
+		HighLimit: item.HighLimit,
+		Unit:      item.Unit,
+		Extra:     &pb.VarDetailExtra{},
+	}
+
+	if _, ok := resetAbleVarMap[item.Key]; ok {
+		varDetail.Extra.ResetAble = true
+	}
+
+	if k, ok := controlSwitchMap[item.Key]; ok {
+		if v, ok := controlSwitchInfoMap[k]; ok {
+			varDetail.Extra.HasControlSwitch = true
+			varDetail.Extra.ControlSwitchStatus = int32(v.RealValue)
+		}
+	}
+
+	return varDetail
+}
+
+func (s *R401SService) formatVarDetailList(list []*dao.DataInfo) []*pb.VarDetail {
+
+	var res []*pb.VarDetail
+	controlSwitchInfoMap := map[string]*dao.DataInfo{}
+	for idx, item := range list {
+		if item.Type == VarTypeControlSwitch {
+			controlSwitchInfoMap[item.Key] = list[idx]
+			continue
+		}
+	}
+
+	for idx, item := range list {
+		if item.Type == VarTypeControlSwitch {
+			continue
+		}
+
+		varDetail := s.formatVarDetail(list[idx], controlSwitchInfoMap)
+		res = append(res, varDetail)
+	}
+	return res
 }

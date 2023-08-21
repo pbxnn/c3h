@@ -16,6 +16,58 @@
     "application/json"
   ],
   "paths": {
+    "/c3h/r401s/apc-control": {
+      "get": {
+        "operationId": "R401S_GetAPCControl",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/r401sVarListReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "R401S"
+        ]
+      },
+      "post": {
+        "operationId": "R401S_SetAPCControl",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/r401sVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/r401sSetAPCControlRequest"
+            }
+          }
+        ],
+        "tags": [
+          "R401S"
+        ]
+      }
+    },
     "/c3h/r401s/confounding-vars": {
       "get": {
         "operationId": "R401S_GetConfoundingVars",
@@ -33,6 +85,38 @@
             }
           }
         },
+        "tags": [
+          "R401S"
+        ]
+      }
+    },
+    "/c3h/r401s/control-switch": {
+      "post": {
+        "operationId": "R401S_SetControlSwitch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/r401sVarReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/r401sSetControlSwitchRequest"
+            }
+          }
+        ],
         "tags": [
           "R401S"
         ]
@@ -167,58 +251,6 @@
           "R401S"
         ]
       }
-    },
-    "/c3h/r401s/switch": {
-      "get": {
-        "operationId": "R401S_GetSwitchInfo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/r401sVarListReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "R401S"
-        ]
-      },
-      "post": {
-        "operationId": "R401S_SetSwitchInfo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/r401sVarReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/r401sSetSwitchInfoRequest"
-            }
-          }
-        ],
-        "tags": [
-          "R401S"
-        ]
-      }
     }
   },
   "definitions": {
@@ -299,28 +331,36 @@
     "r401sResetRequest": {
       "type": "object",
       "properties": {
-        "switch_name": {
-          "type": "string"
-        },
-        "switch_key": {
-          "type": "string"
-        },
-        "switch_status": {
+        "key": {
           "type": "string"
         }
       }
     },
-    "r401sSetSwitchInfoRequest": {
+    "r401sSetAPCControlRequest": {
       "type": "object",
       "properties": {
-        "switch_name": {
+        "key": {
           "type": "string"
         },
-        "switch_key": {
+        "type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "set_value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "r401sSetControlSwitchRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
           "type": "string"
         },
-        "switch_status": {
-          "type": "string"
+        "status": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
@@ -336,7 +376,7 @@
         "has_control_switch": {
           "type": "boolean"
         },
-        "control_swith_status": {
+        "control_switch_status": {
           "type": "integer",
           "format": "int32"
         }

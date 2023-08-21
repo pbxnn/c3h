@@ -1,6 +1,7 @@
 package data
 
 import (
+	"c3h/internal/biz"
 	"c3h/internal/data/dao"
 	"c3h/pkg/cache"
 	"context"
@@ -9,21 +10,23 @@ import (
 	"gorm.io/gorm"
 )
 
-type ModuleRelationRepo struct {
+var _ biz.ModuleRelationRepo = (*moduleRelationRepo)(nil)
+
+type moduleRelationRepo struct {
 	logger *log.Helper
 	db     *gorm.DB
 	cache  cache.Cache
 }
 
-func NewModuleRelationRepo(db *gorm.DB, cache cache.Cache, logger log.Logger) *ModuleRelationRepo {
-	return &ModuleRelationRepo{
+func NewModuleRelationRepo(db *gorm.DB, cache cache.Cache, logger log.Logger) biz.ModuleRelationRepo {
+	return &moduleRelationRepo{
 		logger: log.NewHelper(log.With(logger, "module", "module-relation-repo")),
 		db:     db,
 		cache:  cache,
 	}
 }
 
-func (mr *ModuleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
+func (mr *moduleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
 
 	var dataList []*dao.DataInfo
 	if err := mr.db.Find(&dataList).WithContext(ctx).Error; err != nil {
@@ -83,7 +86,7 @@ func (mr *ModuleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
 	}
 }
 
-func (mr *ModuleRelationRepo) GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
+func (mr *moduleRelationRepo) GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
 	var res []*dao.ModuleDataMap
 	err := mr.db.WithContext(ctx).Table(dao.ModuleDataMapTblName).Where("module_key", moduleKey).Find(&res).Error
 	return res, err

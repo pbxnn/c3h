@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	R401S_GetSwitchInfo_FullMethodName         = "/api.r401s.R401S/GetSwitchInfo"
-	R401S_SetSwitchInfo_FullMethodName         = "/api.r401s.R401S/SetSwitchInfo"
+	R401S_GetAPCControl_FullMethodName         = "/api.r401s.R401S/GetAPCControl"
+	R401S_SetAPCControl_FullMethodName         = "/api.r401s.R401S/SetAPCControl"
+	R401S_SetControlSwitch_FullMethodName      = "/api.r401s.R401S/SetControlSwitch"
 	R401S_Reset_FullMethodName                 = "/api.r401s.R401S/Reset"
 	R401S_GetOperationVars_FullMethodName      = "/api.r401s.R401S/GetOperationVars"
 	R401S_GetStatusVars_FullMethodName         = "/api.r401s.R401S/GetStatusVars"
@@ -33,14 +34,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type R401SClient interface {
-	GetSwitchInfo(ctx context.Context, in *GetSwitchInfoRequest, opts ...grpc.CallOption) (*VarListReply, error)
-	SetSwitchInfo(ctx context.Context, in *SetSwitchInfoRequest, opts ...grpc.CallOption) (*VarReply, error)
+	GetAPCControl(ctx context.Context, in *GetAPCControlRequest, opts ...grpc.CallOption) (*VarListReply, error)
+	SetAPCControl(ctx context.Context, in *SetAPCControlRequest, opts ...grpc.CallOption) (*VarReply, error)
+	SetControlSwitch(ctx context.Context, in *SetControlSwitchRequest, opts ...grpc.CallOption) (*VarReply, error)
 	Reset(ctx context.Context, in *ResetRequest, opts ...grpc.CallOption) (*VarReply, error)
 	GetOperationVars(ctx context.Context, in *GetOperationVarsRequest, opts ...grpc.CallOption) (*VarListReply, error)
 	GetStatusVars(ctx context.Context, in *GetStatusVarsRequest, opts ...grpc.CallOption) (*VarListReply, error)
 	GetConfoundingVars(ctx context.Context, in *GetConfoundingVarsRequest, opts ...grpc.CallOption) (*VarListReply, error)
 	GetReactorPerformance(ctx context.Context, in *GetReactorPerformanceRequest, opts ...grpc.CallOption) (*VarListReply, error)
-	ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...grpc.CallOption) (*ConfirmReactorPerfReply, error)
+	ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...grpc.CallOption) (*VarListReply, error)
 }
 
 type r401SClient struct {
@@ -51,18 +53,27 @@ func NewR401SClient(cc grpc.ClientConnInterface) R401SClient {
 	return &r401SClient{cc}
 }
 
-func (c *r401SClient) GetSwitchInfo(ctx context.Context, in *GetSwitchInfoRequest, opts ...grpc.CallOption) (*VarListReply, error) {
+func (c *r401SClient) GetAPCControl(ctx context.Context, in *GetAPCControlRequest, opts ...grpc.CallOption) (*VarListReply, error) {
 	out := new(VarListReply)
-	err := c.cc.Invoke(ctx, R401S_GetSwitchInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, R401S_GetAPCControl_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *r401SClient) SetSwitchInfo(ctx context.Context, in *SetSwitchInfoRequest, opts ...grpc.CallOption) (*VarReply, error) {
+func (c *r401SClient) SetAPCControl(ctx context.Context, in *SetAPCControlRequest, opts ...grpc.CallOption) (*VarReply, error) {
 	out := new(VarReply)
-	err := c.cc.Invoke(ctx, R401S_SetSwitchInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, R401S_SetAPCControl_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *r401SClient) SetControlSwitch(ctx context.Context, in *SetControlSwitchRequest, opts ...grpc.CallOption) (*VarReply, error) {
+	out := new(VarReply)
+	err := c.cc.Invoke(ctx, R401S_SetControlSwitch_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,8 +125,8 @@ func (c *r401SClient) GetReactorPerformance(ctx context.Context, in *GetReactorP
 	return out, nil
 }
 
-func (c *r401SClient) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...grpc.CallOption) (*ConfirmReactorPerfReply, error) {
-	out := new(ConfirmReactorPerfReply)
+func (c *r401SClient) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...grpc.CallOption) (*VarListReply, error) {
+	out := new(VarListReply)
 	err := c.cc.Invoke(ctx, R401S_ConfirmReactorPerf_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -127,14 +138,15 @@ func (c *r401SClient) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactor
 // All implementations must embed UnimplementedR401SServer
 // for forward compatibility
 type R401SServer interface {
-	GetSwitchInfo(context.Context, *GetSwitchInfoRequest) (*VarListReply, error)
-	SetSwitchInfo(context.Context, *SetSwitchInfoRequest) (*VarReply, error)
+	GetAPCControl(context.Context, *GetAPCControlRequest) (*VarListReply, error)
+	SetAPCControl(context.Context, *SetAPCControlRequest) (*VarReply, error)
+	SetControlSwitch(context.Context, *SetControlSwitchRequest) (*VarReply, error)
 	Reset(context.Context, *ResetRequest) (*VarReply, error)
 	GetOperationVars(context.Context, *GetOperationVarsRequest) (*VarListReply, error)
 	GetStatusVars(context.Context, *GetStatusVarsRequest) (*VarListReply, error)
 	GetConfoundingVars(context.Context, *GetConfoundingVarsRequest) (*VarListReply, error)
 	GetReactorPerformance(context.Context, *GetReactorPerformanceRequest) (*VarListReply, error)
-	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*ConfirmReactorPerfReply, error)
+	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error)
 	mustEmbedUnimplementedR401SServer()
 }
 
@@ -142,11 +154,14 @@ type R401SServer interface {
 type UnimplementedR401SServer struct {
 }
 
-func (UnimplementedR401SServer) GetSwitchInfo(context.Context, *GetSwitchInfoRequest) (*VarListReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSwitchInfo not implemented")
+func (UnimplementedR401SServer) GetAPCControl(context.Context, *GetAPCControlRequest) (*VarListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAPCControl not implemented")
 }
-func (UnimplementedR401SServer) SetSwitchInfo(context.Context, *SetSwitchInfoRequest) (*VarReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetSwitchInfo not implemented")
+func (UnimplementedR401SServer) SetAPCControl(context.Context, *SetAPCControlRequest) (*VarReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetAPCControl not implemented")
+}
+func (UnimplementedR401SServer) SetControlSwitch(context.Context, *SetControlSwitchRequest) (*VarReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetControlSwitch not implemented")
 }
 func (UnimplementedR401SServer) Reset(context.Context, *ResetRequest) (*VarReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reset not implemented")
@@ -163,7 +178,7 @@ func (UnimplementedR401SServer) GetConfoundingVars(context.Context, *GetConfound
 func (UnimplementedR401SServer) GetReactorPerformance(context.Context, *GetReactorPerformanceRequest) (*VarListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReactorPerformance not implemented")
 }
-func (UnimplementedR401SServer) ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*ConfirmReactorPerfReply, error) {
+func (UnimplementedR401SServer) ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmReactorPerf not implemented")
 }
 func (UnimplementedR401SServer) mustEmbedUnimplementedR401SServer() {}
@@ -179,38 +194,56 @@ func RegisterR401SServer(s grpc.ServiceRegistrar, srv R401SServer) {
 	s.RegisterService(&R401S_ServiceDesc, srv)
 }
 
-func _R401S_GetSwitchInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSwitchInfoRequest)
+func _R401S_GetAPCControl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAPCControlRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(R401SServer).GetSwitchInfo(ctx, in)
+		return srv.(R401SServer).GetAPCControl(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: R401S_GetSwitchInfo_FullMethodName,
+		FullMethod: R401S_GetAPCControl_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(R401SServer).GetSwitchInfo(ctx, req.(*GetSwitchInfoRequest))
+		return srv.(R401SServer).GetAPCControl(ctx, req.(*GetAPCControlRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _R401S_SetSwitchInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetSwitchInfoRequest)
+func _R401S_SetAPCControl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetAPCControlRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(R401SServer).SetSwitchInfo(ctx, in)
+		return srv.(R401SServer).SetAPCControl(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: R401S_SetSwitchInfo_FullMethodName,
+		FullMethod: R401S_SetAPCControl_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(R401SServer).SetSwitchInfo(ctx, req.(*SetSwitchInfoRequest))
+		return srv.(R401SServer).SetAPCControl(ctx, req.(*SetAPCControlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _R401S_SetControlSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetControlSwitchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(R401SServer).SetControlSwitch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: R401S_SetControlSwitch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(R401SServer).SetControlSwitch(ctx, req.(*SetControlSwitchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -331,12 +364,16 @@ var R401S_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*R401SServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetSwitchInfo",
-			Handler:    _R401S_GetSwitchInfo_Handler,
+			MethodName: "GetAPCControl",
+			Handler:    _R401S_GetAPCControl_Handler,
 		},
 		{
-			MethodName: "SetSwitchInfo",
-			Handler:    _R401S_SetSwitchInfo_Handler,
+			MethodName: "SetAPCControl",
+			Handler:    _R401S_SetAPCControl_Handler,
+		},
+		{
+			MethodName: "SetControlSwitch",
+			Handler:    _R401S_SetControlSwitch_Handler,
 		},
 		{
 			MethodName: "Reset",

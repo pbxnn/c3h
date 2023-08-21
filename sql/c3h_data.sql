@@ -42,9 +42,9 @@ values
 ('FIC-40013', 'R401S_hydrogen_ratio_control_switch', '配氢比控制开关', 1, 1, 1, 0, 0, 0, ''),
 ('FIC-40025', 'R401S_ingress_temperature_control_switch', '入口温度控制开关', 1, 1, 1, 0, 0, 0, ''),
 
-('FIC-40014A', 'R401S_mixed_total_materials_flow', '混合总物料流量', 2, 132.57, 132.57, 0, 0.00, 200.00, ''),
-('FIC-40003', 'R401S_fresh_materials_flow', '新鲜物料流量', 2, 63.09, 63.09, 0, 0.00, 100.00, ''),
-('FIC-40040A', 'R401S_egress_temperature', '出口温度', 2, 55.31, 55.31, 0, 0.00, 100.00, '');
+('FIC-40014A', 'R401S_mixed_total_materials_flow', '混合总物料流量', 2, 132.57, 132.57, 0, 0.00, 200.00, 'kg/h'),
+('FIC-40003', 'R401S_fresh_materials_flow', '新鲜物料流量', 2, 63.09, 63.09, 0, 0.00, 100.00, 't/h'),
+('FIC-40040A', 'R401S_egress_temperature', '出口温度', 2, 55.31, 55.31, 0, 0.00, 100.00, '°C');
 
 ('PBI-40007B', 'R401S_reactor_pressure_drop', '反应器压降', 2, 99.43, 0, 0, 0.00, 200.00, 'KPA'),
 ('TI-40037AA', 'R401S_up_bed_temperature_AA', '上层床层温度', 2, 41.33, 0, 0, 0.00, 100.00, '°C'),

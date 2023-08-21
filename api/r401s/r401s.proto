@@ -3,20 +3,28 @@ syntax = "proto3";
 package api.r401s;
 
 import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
 
 option go_package = "c3h/api/r401s;r401s";
 
 service R401S {
 
-  rpc GetSwitchInfo (GetSwitchInfoRequest) returns (VarListReply) {
+  rpc GetAPCControl (GetAPCControlRequest) returns (VarListReply) {
     option (google.api.http) = {
-      get: "/c3h/r401s/switch"
+      get: "/c3h/r401s/apc-control"
     };
   }
 
-  rpc SetSwitchInfo (SetSwitchInfoRequest) returns (VarReply) {
+  rpc SetAPCControl (SetAPCControlRequest) returns (VarReply) {
     option (google.api.http) = {
-      post: "/c3h/r401s/switch",
+      post: "/c3h/r401s/apc-control",
+      body: "*"
+    };
+  }
+
+  rpc SetControlSwitch (SetControlSwitchRequest) returns (VarReply) {
+    option (google.api.http) = {
+      post: "/c3h/r401s/control-switch",
       body: "*"
     };
   }
@@ -52,7 +60,7 @@ service R401S {
     };
   }
 
-  rpc ConfirmReactorPerf (ConfirmReactorPerfRequest) returns (ConfirmReactorPerfReply) {
+  rpc ConfirmReactorPerf (ConfirmReactorPerfRequest) returns (VarListReply) {
     option (google.api.http) = {
       post: "/c3h/r401s/reactor-perf"
       body: "*"
@@ -60,7 +68,7 @@ service R401S {
   }
 }
 
-message GetSwitchInfoRequest {}
+message GetAPCControlRequest {}
 
 message GetOperationVarsRequest {}
 
@@ -75,16 +83,19 @@ message VarListReply {
   VarReplyData data = 2;
 }
 
-message SetSwitchInfoRequest{
-  string switch_name   = 1;
-  string switch_key    = 2;
-  string switch_status = 3;
+message SetControlSwitchRequest {
+  string key    = 1;
+  double status = 2;
+}
+
+message SetAPCControlRequest{
+  string key       = 1;
+  int32  type      = 2;
+  double set_value = 3;
 }
 
 message ResetRequest{
-  string switch_name   = 1;
-  string switch_key    = 2;
-  string switch_status = 3;
+  string key = 1;
 }
 
 message SetR401APCRequest {
@@ -103,8 +114,9 @@ message SetOperationVarsRequest {
 }
 message SetOperationVarsReply {}
 
-message ConfirmReactorPerfRequest {}
-message ConfirmReactorPerfReply {}
+message ConfirmReactorPerfRequest {
+  google.protobuf.Struct confirm_data = 1;
+}
 
 message GetReactorPerfRequest {}
 message GetReactorPerfReply {
@@ -144,8 +156,8 @@ message VarDetail {
 }
 
 message VarDetailExtra {
-  bool  edit_able            = 1;
-  bool  reset_able           = 2;
-  bool  has_control_switch   = 3;
-  int32 control_swith_status = 4;
+  bool  edit_able             = 1;
+  bool  reset_able            = 2;
+  bool  has_control_switch    = 3;
+  int32 control_switch_status = 4;
 }
