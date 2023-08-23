@@ -36,7 +36,8 @@ message Data {
     string source = 2;
   }
   message Cache {
-    int32 size = 1;
+    int64 size   = 1;
+    int64 expire = 2;
   }
   message IndustrialApi {
     string addr = 1;

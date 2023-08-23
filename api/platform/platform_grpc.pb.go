@@ -19,89 +19,89 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ProductNet_CollectData_FullMethodName = "/api.platform.ProductNet/CollectData"
+	Platform_CollectData_FullMethodName = "/api.platform.Platform/CollectData"
 )
 
-// ProductNetClient is the client API for ProductNet service.
+// PlatformClient is the client API for Platform service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ProductNetClient interface {
+type PlatformClient interface {
 	CollectData(ctx context.Context, in *CollectDataRequest, opts ...grpc.CallOption) (*CollectDataReply, error)
 }
 
-type productNetClient struct {
+type platformClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProductNetClient(cc grpc.ClientConnInterface) ProductNetClient {
-	return &productNetClient{cc}
+func NewPlatformClient(cc grpc.ClientConnInterface) PlatformClient {
+	return &platformClient{cc}
 }
 
-func (c *productNetClient) CollectData(ctx context.Context, in *CollectDataRequest, opts ...grpc.CallOption) (*CollectDataReply, error) {
+func (c *platformClient) CollectData(ctx context.Context, in *CollectDataRequest, opts ...grpc.CallOption) (*CollectDataReply, error) {
 	out := new(CollectDataReply)
-	err := c.cc.Invoke(ctx, ProductNet_CollectData_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Platform_CollectData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProductNetServer is the server API for ProductNet service.
-// All implementations must embed UnimplementedProductNetServer
+// PlatformServer is the server API for Platform service.
+// All implementations must embed UnimplementedPlatformServer
 // for forward compatibility
-type ProductNetServer interface {
+type PlatformServer interface {
 	CollectData(context.Context, *CollectDataRequest) (*CollectDataReply, error)
-	mustEmbedUnimplementedProductNetServer()
+	mustEmbedUnimplementedPlatformServer()
 }
 
-// UnimplementedProductNetServer must be embedded to have forward compatible implementations.
-type UnimplementedProductNetServer struct {
+// UnimplementedPlatformServer must be embedded to have forward compatible implementations.
+type UnimplementedPlatformServer struct {
 }
 
-func (UnimplementedProductNetServer) CollectData(context.Context, *CollectDataRequest) (*CollectDataReply, error) {
+func (UnimplementedPlatformServer) CollectData(context.Context, *CollectDataRequest) (*CollectDataReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CollectData not implemented")
 }
-func (UnimplementedProductNetServer) mustEmbedUnimplementedProductNetServer() {}
+func (UnimplementedPlatformServer) mustEmbedUnimplementedPlatformServer() {}
 
-// UnsafeProductNetServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ProductNetServer will
+// UnsafePlatformServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PlatformServer will
 // result in compilation errors.
-type UnsafeProductNetServer interface {
-	mustEmbedUnimplementedProductNetServer()
+type UnsafePlatformServer interface {
+	mustEmbedUnimplementedPlatformServer()
 }
 
-func RegisterProductNetServer(s grpc.ServiceRegistrar, srv ProductNetServer) {
-	s.RegisterService(&ProductNet_ServiceDesc, srv)
+func RegisterPlatformServer(s grpc.ServiceRegistrar, srv PlatformServer) {
+	s.RegisterService(&Platform_ServiceDesc, srv)
 }
 
-func _ProductNet_CollectData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Platform_CollectData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CollectDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductNetServer).CollectData(ctx, in)
+		return srv.(PlatformServer).CollectData(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductNet_CollectData_FullMethodName,
+		FullMethod: Platform_CollectData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductNetServer).CollectData(ctx, req.(*CollectDataRequest))
+		return srv.(PlatformServer).CollectData(ctx, req.(*CollectDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ProductNet_ServiceDesc is the grpc.ServiceDesc for ProductNet service.
+// Platform_ServiceDesc is the grpc.ServiceDesc for Platform service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ProductNet_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.platform.ProductNet",
-	HandlerType: (*ProductNetServer)(nil),
+var Platform_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.platform.Platform",
+	HandlerType: (*PlatformServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CollectData",
-			Handler:    _ProductNet_CollectData_Handler,
+			Handler:    _Platform_CollectData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

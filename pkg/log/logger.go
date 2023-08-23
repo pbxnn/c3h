@@ -130,8 +130,8 @@ func FileOutput(filename string, rotateTime, maxAge *durationpb.Duration) Option
 		}
 
 		logf, err := rotatelogs.New(
-			filename,
-			rotatelogs.WithLinkName(filename+".%Y&m%d%H"),
+			filename+".%Y%m%d%H",
+			rotatelogs.WithLinkName(filename),
 			rotatelogs.WithRotationTime(rt),
 			rotatelogs.WithMaxAge(ma),
 		)

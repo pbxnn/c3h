@@ -19,24 +19,24 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationProductNetCollectData = "/api.platform.ProductNet/CollectData"
+const OperationPlatformCollectData = "/api.platform.Platform/CollectData"
 
-type ProductNetHTTPServer interface {
+type PlatformHTTPServer interface {
 	CollectData(context.Context, *CollectDataRequest) (*CollectDataReply, error)
 }
 
-func RegisterProductNetHTTPServer(s *http.Server, srv ProductNetHTTPServer) {
+func RegisterPlatformHTTPServer(s *http.Server, srv PlatformHTTPServer) {
 	r := s.Route("/")
-	r.GET("/c3h/platform/collect-data", _ProductNet_CollectData0_HTTP_Handler(srv))
+	r.GET("/c3h/platform/collect-data", _Platform_CollectData0_HTTP_Handler(srv))
 }
 
-func _ProductNet_CollectData0_HTTP_Handler(srv ProductNetHTTPServer) func(ctx http.Context) error {
+func _Platform_CollectData0_HTTP_Handler(srv PlatformHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CollectDataRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationProductNetCollectData)
+		http.SetOperation(ctx, OperationPlatformCollectData)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CollectData(ctx, req.(*CollectDataRequest))
 		})
@@ -49,23 +49,23 @@ func _ProductNet_CollectData0_HTTP_Handler(srv ProductNetHTTPServer) func(ctx ht
 	}
 }
 
-type ProductNetHTTPClient interface {
+type PlatformHTTPClient interface {
 	CollectData(ctx context.Context, req *CollectDataRequest, opts ...http.CallOption) (rsp *CollectDataReply, err error)
 }
 
-type ProductNetHTTPClientImpl struct {
+type PlatformHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewProductNetHTTPClient(client *http.Client) ProductNetHTTPClient {
-	return &ProductNetHTTPClientImpl{client}
+func NewPlatformHTTPClient(client *http.Client) PlatformHTTPClient {
+	return &PlatformHTTPClientImpl{client}
 }
 
-func (c *ProductNetHTTPClientImpl) CollectData(ctx context.Context, in *CollectDataRequest, opts ...http.CallOption) (*CollectDataReply, error) {
+func (c *PlatformHTTPClientImpl) CollectData(ctx context.Context, in *CollectDataRequest, opts ...http.CallOption) (*CollectDataReply, error) {
 	var out CollectDataReply
 	pattern := "/c3h/platform/collect-data"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationProductNetCollectData))
+	opts = append(opts, http.Operation(OperationPlatformCollectData))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

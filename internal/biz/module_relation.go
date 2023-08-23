@@ -7,6 +7,6 @@ import (
 )
 
 type ModuleRelationRepo interface {
-	UpdateModuleRelationCache(ctx context.Context)
+	RefreshCache(ctx context.Context)
 	GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error)
 }

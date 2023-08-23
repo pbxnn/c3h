@@ -30,6 +30,7 @@ var DProviderSet = wire.NewSet(
 )
 
 const defaultCacheSize = 1024000000 // 100MB
+const defaultCacheExpire = 3        // 3s
 
 // Data .
 type Data struct {
@@ -84,10 +85,17 @@ func NewDB(c *conf.Data, logger log.Logger) *gorm.DB {
 //}
 
 func NewCache(c *conf.Data) cache.Cache {
-	size := defaultCacheSize
-	if c.GetCache() != nil || c.GetCache().GetSize() > 0 {
-		size = (int)(c.GetCache().GetSize())
+	size := int64(defaultCacheSize)
+	expire := int64(defaultCacheExpire)
+	if cc := c.GetCache(); cc != nil {
+		if s := cc.GetSize(); s > 0 {
+			size = (int64)(s)
+		}
+
+		if e := cc.GetExpire(); e > 0 {
+			expire = (int64)(e)
+		}
 	}
 
-	return cache.NewCache(size)
+	return cache.NewCache(size, expire)
 }

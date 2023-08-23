@@ -20,20 +20,21 @@ const CollectJobName = "c3h_collector"
 type CollectJob struct {
 	logger   *log.Helper
 	schedule string
-	cr       biz.CollectRepo
-	alu      *biz.AuditLogUsecase
+
+	uc  *biz.CollectUsecase
+	alu *biz.AuditLogUsecase
 }
 
-func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, cr biz.CollectRepo, alu *biz.AuditLogUsecase) *CollectJob {
+func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, uc *biz.CollectUsecase, alu *biz.AuditLogUsecase) *CollectJob {
 	sc, ok := bc.Job.Schedule["collect"]
 	if !ok {
 		sc = DefaultCollectSchedule
 	}
 
 	return &CollectJob{
-		logger:   log.NewHelper(log.With(logger, "module", "collect-service")),
+		logger:   log.NewHelper(log.With(logger, "module", "collect-job")),
 		schedule: sc,
-		cr:       cr,
+		uc:       uc,
 		alu:      alu,
 	}
 }
@@ -41,27 +42,16 @@ func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, cr biz.CollectRepo, al
 func (cj *CollectJob) Run() {
 	var err error
 	var list []*dao.DataInfo
-	var op = platform.OperationProductNetCollectData
+	var op = platform.OperationPlatformCollectData
 	ctx := cj.initCtx(context.Background())
 
 	defer func() {
 		cj.alu.AddCronRecord(ctx, op, list, err)
 	}()
 
-	list, err = cj.cr.CollectData(ctx)
+	err = cj.uc.Run(ctx)
 	if err != nil {
-		cj.logger.Warn()
-		return
-	}
-
-	err = cj.cr.UpdateDB(ctx, list)
-	if err != nil {
-		return
-	}
-
-	err = cj.cr.UpdateCache(ctx, list)
-	if err != nil {
-		return
+		cj.logger.Warn("collect job run err:%s", err.Error())
 	}
 }
 

@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 
 option go_package = "c3h/api/platform;platform";
 
-service ProductNet {
+service Platform {
   rpc CollectData (CollectDataRequest) returns (CollectDataReply) {
     option (google.api.http) = {
       get: "/c3h/platform/collect-data"

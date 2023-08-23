@@ -52,7 +52,7 @@ var operationMap = map[string]uint{
 	r401s.OperationR401SSetControlSwitch:   OpR401SSetOperationControlSwitch,
 	r401s.OperationR401SSetAPCControl:      OpR401SSetAPCControl,
 
-	platform.OperationProductNetCollectData: OperationCollectData,
+	platform.OperationPlatformCollectData: OperationCollectData,
 }
 
 var resourceMap = map[string]uint{
@@ -62,7 +62,7 @@ var resourceMap = map[string]uint{
 	r401s.OperationR401SSetControlSwitch:   OpR401SSetOperationControlSwitch,
 	r401s.OperationR401SSetAPCControl:      OpR401SSetAPCControl,
 
-	platform.OperationProductNetCollectData: ResourceCollectData,
+	platform.OperationPlatformCollectData: ResourceCollectData,
 }
 
 type AuditLogRepo interface {

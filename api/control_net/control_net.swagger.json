@@ -147,7 +147,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apicontrol_netConfirmReactorPerfReply"
+              "$ref": "#/definitions/control_netConfirmReactorPerfReply"
             }
           },
           "default": {
@@ -196,9 +196,6 @@
     }
   },
   "definitions": {
-    "apicontrol_netConfirmReactorPerfReply": {
-      "type": "object"
-    },
     "apicontrol_netConfirmReactorPerfRequest": {
       "type": "object"
     },
@@ -307,6 +304,9 @@
           }
         }
       }
+    },
+    "control_netConfirmReactorPerfReply": {
+      "type": "object"
     },
     "control_netGetOperationVarsReply": {
       "type": "object",

@@ -151,7 +151,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apir401sConfirmReactorPerfReply"
+              "$ref": "#/definitions/r401sVarListReply"
             }
           },
           "default": {
@@ -254,11 +254,13 @@
     }
   },
   "definitions": {
-    "apir401sConfirmReactorPerfReply": {
-      "type": "object"
-    },
     "apir401sConfirmReactorPerfRequest": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "confirm_data": {
+          "type": "object"
+        }
+      }
     },
     "apir401sVarDetail": {
       "type": "object",
@@ -327,6 +329,14 @@
         }
       },
       "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
     "r401sResetRequest": {
       "type": "object",

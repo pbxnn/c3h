@@ -5,12 +5,16 @@ import (
 	"c3h/internal/data/dao"
 	"c3h/pkg/cache"
 	"context"
+	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
 )
 
 var _ biz.ModuleRelationRepo = (*moduleRelationRepo)(nil)
+
+const ModuleMapCacheKey = "ModuleMapKey_"
+const DataMapCacheKey = "DataMapKey_"
 
 type moduleRelationRepo struct {
 	logger *log.Helper
@@ -26,68 +30,86 @@ func NewModuleRelationRepo(db *gorm.DB, cache cache.Cache, logger log.Logger) bi
 	}
 }
 
-func (mr *moduleRelationRepo) UpdateModuleRelationCache(ctx context.Context) {
+func (rp *moduleRelationRepo) RefreshCache(ctx context.Context) {
+	var res []*dao.ModuleDataMap
+	var err error
 
-	var dataList []*dao.DataInfo
-	if err := mr.db.Find(&dataList).WithContext(ctx).Error; err != nil {
-		mr.logger.Warn()
-		return
-	}
-
-	var moduleList []*dao.ModuleInfo
-	if err := mr.db.Find(&moduleList).WithContext(ctx).Error; err != nil {
-		mr.logger.Warn()
-		return
-	}
-
-	var mdList []*dao.ModuleDataMap
-	err := mr.db.Find(&mdList).WithContext(ctx).Error
+	err = rp.db.Model(res).Find(&res).Error
 	if err != nil {
-		mr.logger.Warn()
+		rp.logger.Warn("refresh cache failed. get data from db err:%s")
 		return
 	}
 
-	moduleMap := map[string]*dao.ModuleInfo{}
-	for idx, item := range moduleList {
-		moduleMap[item.Key] = moduleList[idx]
-	}
-
-	dataMap := map[string]*dao.DataInfo{}
-	for idx, item := range dataList {
-		dataMap[item.Key] = dataList[idx]
-	}
-
-	moduleRelation := map[string][]string{}
-	for _, item := range mdList {
-		var mKey string
-		var dKey string
-		if m, ok := moduleMap[item.ModuleKey]; ok {
-			mKey = m.Key
-		}
-
-		if d, ok := dataMap[item.DataKey]; ok {
-			dKey = d.Key
-		}
-
-		if len(dKey) == 0 || len(mKey) == 0 {
-			continue
-		}
-
-		if _, ok := moduleRelation[mKey]; !ok {
-			moduleRelation[mKey] = []string{}
-		}
-		moduleRelation[mKey] = append(moduleRelation[mKey], dKey)
-	}
-
-	for k, v := range moduleRelation {
-		if err := mr.cache.Set(k, v); err != nil {
-			mr.logger.Warn()
-		}
-	}
+	rp.setCache(ctx, res)
 }
 
-func (mr *moduleRelationRepo) GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
+func (rp *moduleRelationRepo) GetByModuleKey(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
 	var res []*dao.ModuleDataMap
-	err := mr.db.WithContext(ctx).Table(dao.ModuleDataMapTblName).Where("module_key", moduleKey).Find(&res).Error
+	var err error
+
+	cacheData, err := rp.getByModuleKeyFromCache(ctx, moduleKey)
+	if err == nil && cacheData != nil {
+		return cacheData, nil
+	}
+
+	err = rp.db.WithContext(ctx).Model(res).Where("module_key", moduleKey).Find(&res).Error
+	rp.setCache(ctx, res)
+
 	return res, err
+}
+
+func (rp *moduleRelationRepo) getByModuleKeyFromCache(ctx context.Context, moduleKey string) ([]*dao.ModuleDataMap, error) {
+	var res []*dao.ModuleDataMap
+	err := rp.cache.Get(ModuleMapCacheKey+moduleKey, res)
+	if err != nil || len(res) == 0 {
+		return nil, fmt.Errorf("get module relation real from cache err:%v, key:%s", err, moduleKey)
+	}
+	return res, err
+}
+
+func (rp *moduleRelationRepo) GetByDataKeys(ctx context.Context, dataKeys []string) ([]*dao.ModuleDataMap, error) {
+	var res []*dao.ModuleDataMap
+	var err error
+
+	cacheData, err := rp.getByDataKeysFromCache(ctx, dataKeys)
+	if err == nil && cacheData != nil {
+		return cacheData, nil
+	}
+
+	err = rp.db.WithContext(ctx).Model(res).Where("data_key", dataKeys).Find(&res).Error
+	rp.setCache(ctx, res)
+
+	return res, err
+}
+
+func (rp *moduleRelationRepo) getByDataKeysFromCache(ctx context.Context, dataKeys []string) ([]*dao.ModuleDataMap, error) {
+	var res []*dao.ModuleDataMap
+	for _, key := range dataKeys {
+		var temp []*dao.ModuleDataMap
+		err := rp.cache.Get(key, temp)
+		if err != nil || len(res) == 0 {
+			return nil, fmt.Errorf("get module relation real from cache err:%v, key:%s", err, key)
+		}
+		res = append(res, temp...)
+	}
+
+	return res, nil
+}
+
+func (rp *moduleRelationRepo) setCache(ctx context.Context, res []*dao.ModuleDataMap) {
+	moduleKeyMap := map[string][]*dao.ModuleDataMap{}
+	dataKeyMap := map[string][]*dao.ModuleDataMap{}
+
+	for idx, item := range res {
+		moduleKeyMap[item.ModuleKey] = append(moduleKeyMap[item.ModuleKey], res[idx])
+		dataKeyMap[item.DataKey] = append(dataKeyMap[item.DataKey], res[idx])
+	}
+
+	for k, v := range moduleKeyMap {
+		rp.cache.Set(ModuleMapCacheKey+k, v)
+	}
+
+	for k, v := range dataKeyMap {
+		rp.cache.Set(DataMapCacheKey+k, v)
+	}
 }

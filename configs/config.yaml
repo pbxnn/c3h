@@ -10,6 +10,7 @@ data:
     source: zxn:pbzxn@tcp(127.0.0.1:3306)/c3h?parseTime=true
   cache:
     size: 1024000000
+    expire: 600
   industrial_api:
     addr: ""
   user_api:

@@ -108,8 +108,8 @@ paths:
     /c3h/platform/collect-data:
         get:
             tags:
-                - ProductNet
-            operationId: ProductNet_CollectData
+                - Platform
+            operationId: Platform_CollectData
             responses:
                 "200":
                     description: OK
@@ -603,6 +603,6 @@ components:
                         $ref: '#/components/schemas/api.r401s.VarDetail'
 tags:
     - name: ControlNet
-    - name: ProductNet
+    - name: Platform
     - name: ProductNet
     - name: R401S
