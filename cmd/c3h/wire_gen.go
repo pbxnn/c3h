@@ -38,12 +38,14 @@ func wireApp(bootstrap *conf.Bootstrap, confData *conf.Data, logger log.Logger) 
 	r401SUsecase := biz.NewR401SUsecase(r401SRepo, dataInfoRepo, logger)
 	r401SService := service.NewR401SService(r401SUsecase, logger)
 	httpServer := server.NewHTTPServer(bootstrap, auditLogUsecase, controlNetService, productNetService, r401SService, logger)
+	websocketServer := server.NewWebsocketServer(bootstrap, logger, r401SService)
 	cronLogger := job.NewCronLogger(logger)
-	collectRepo := data.NewCollectorRepo(logger)
+	platformHTTPClient := data.NewPlatformClient(confData, logger)
+	collectRepo := data.NewCollectorRepo(platformHTTPClient, db, logger)
 	collectUsecase := biz.NewCollectUsecase(logger, collectRepo, moduleRelationRepo, dataInfoRepo)
-	collectJob := job.NewCollectJob(bootstrap, logger, collectUsecase, auditLogUsecase)
+	collectJob := job.NewCollectJob(bootstrap, logger, collectUsecase, auditLogUsecase, r401SService)
 	cron := job.NewCron(cronLogger, collectJob)
-	c3h := newApp(logger, httpServer, cron)
+	c3h := newApp(logger, httpServer, websocketServer, cron)
 	return c3h, func() {
 	}, nil
 }

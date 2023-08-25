@@ -21,6 +21,7 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationR401SConfirmReactorPerf = "/api.r401s.R401S/ConfirmReactorPerf"
 const OperationR401SGetAPCControl = "/api.r401s.R401S/GetAPCControl"
+const OperationR401SGetAll = "/api.r401s.R401S/GetAll"
 const OperationR401SGetConfoundingVars = "/api.r401s.R401S/GetConfoundingVars"
 const OperationR401SGetOperationVars = "/api.r401s.R401S/GetOperationVars"
 const OperationR401SGetReactorPerformance = "/api.r401s.R401S/GetReactorPerformance"
@@ -32,6 +33,7 @@ const OperationR401SSetControlSwitch = "/api.r401s.R401S/SetControlSwitch"
 type R401SHTTPServer interface {
 	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error)
 	GetAPCControl(context.Context, *GetAPCControlRequest) (*VarListReply, error)
+	GetAll(context.Context, *R401SGetAllRequest) (*R401SWsMessage, error)
 	GetConfoundingVars(context.Context, *GetConfoundingVarsRequest) (*VarListReply, error)
 	GetOperationVars(context.Context, *GetOperationVarsRequest) (*VarListReply, error)
 	GetReactorPerformance(context.Context, *GetReactorPerformanceRequest) (*VarListReply, error)
@@ -52,6 +54,7 @@ func RegisterR401SHTTPServer(s *http.Server, srv R401SHTTPServer) {
 	r.GET("/c3h/r401s/confounding-vars", _R401S_GetConfoundingVars1_HTTP_Handler(srv))
 	r.GET("/c3h/r401s/reactor-performance", _R401S_GetReactorPerformance0_HTTP_Handler(srv))
 	r.POST("/c3h/r401s/reactor-perf", _R401S_ConfirmReactorPerf0_HTTP_Handler(srv))
+	r.GET("/c3h/r401s/all", _R401S_GetAll0_HTTP_Handler(srv))
 }
 
 func _R401S_GetAPCControl0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
@@ -225,9 +228,29 @@ func _R401S_ConfirmReactorPerf0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.
 	}
 }
 
+func _R401S_GetAll0_HTTP_Handler(srv R401SHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in R401SGetAllRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationR401SGetAll)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAll(ctx, req.(*R401SGetAllRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*R401SWsMessage)
+		return ctx.Result(200, reply)
+	}
+}
+
 type R401SHTTPClient interface {
 	ConfirmReactorPerf(ctx context.Context, req *ConfirmReactorPerfRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetAPCControl(ctx context.Context, req *GetAPCControlRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
+	GetAll(ctx context.Context, req *R401SGetAllRequest, opts ...http.CallOption) (rsp *R401SWsMessage, err error)
 	GetConfoundingVars(ctx context.Context, req *GetConfoundingVarsRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetOperationVars(ctx context.Context, req *GetOperationVarsRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
 	GetReactorPerformance(ctx context.Context, req *GetReactorPerformanceRequest, opts ...http.CallOption) (rsp *VarListReply, err error)
@@ -263,6 +286,19 @@ func (c *R401SHTTPClientImpl) GetAPCControl(ctx context.Context, in *GetAPCContr
 	pattern := "/c3h/r401s/apc-control"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationR401SGetAPCControl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *R401SHTTPClientImpl) GetAll(ctx context.Context, in *R401SGetAllRequest, opts ...http.CallOption) (*R401SWsMessage, error) {
+	var out R401SWsMessage
+	pattern := "/c3h/r401s/all"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationR401SGetAll))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

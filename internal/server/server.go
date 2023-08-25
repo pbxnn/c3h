@@ -5,4 +5,4 @@ import (
 )
 
 // SrvProviderSet is server providers.
-var SrvProviderSet = wire.NewSet(NewHTTPServer)
+var SrvProviderSet = wire.NewSet(NewHTTPServer, NewWebsocketServer)

@@ -66,6 +66,12 @@ service R401S {
       body: "*"
     };
   }
+
+  rpc GetAll(R401sGetAllRequest) returns (R401sWsMessage) {
+    option (google.api.http) = {
+      get: "/c3h/r401s/all"
+    };
+  }
 }
 
 message GetAPCControlRequest {}
@@ -160,4 +166,22 @@ message VarDetailExtra {
   bool  reset_able            = 2;
   bool  has_control_switch    = 3;
   int32 control_switch_status = 4;
+}
+
+enum MessageType {
+  R401S_WS = 0;
+}
+
+message R401sGetAllRequest {}
+
+message R401sWsMessage {
+  message Data {
+    repeated VarDetail ApcVars                = 1;
+    repeated VarDetail OperationVars          = 2;
+    repeated VarDetail ConfoundingVars        = 3;
+    repeated VarDetail StatusVars             = 4;
+    repeated VarDetail ReactorPerformanceVars = 5;
+  }
+  int32 code = 1;
+  Data  data = 2;
 }

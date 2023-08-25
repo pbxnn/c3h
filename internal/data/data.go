@@ -1,8 +1,15 @@
 package data
 
 import (
+	"context"
+
+	"c3h/api/platform"
 	"c3h/internal/conf"
 	"c3h/pkg/cache"
+
+	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -27,6 +34,7 @@ var DProviderSet = wire.NewSet(
 	NewModuleRelationRepo,
 	NewR401SRepo,
 	NewDataInfoRepo,
+	NewPlatformClient,
 )
 
 const defaultCacheSize = 1024000000 // 100MB
@@ -67,22 +75,22 @@ func NewDB(c *conf.Data, logger log.Logger) *gorm.DB {
 	return db
 }
 
-//func NewIndustrialDataClient(c *conf.Data, logger log.Logger) platform.IndustrialDataHTTPClient {
-//	conn, err := http.NewClient(
-//		context.Background(),
-//		http.WithEndpoint(c.IndustrialApi.Addr),
-//		http.WithMiddleware(
-//			recovery.Recovery(),
-//			logging.Client(logger),
-//		),
-//	)
-//
-//	if err != nil {
-//		panic(err)
-//	}
-//	client := platform.NewIndustrialDataHTTPClient(conn)
-//	return client
-//}
+func NewPlatformClient(c *conf.Data, logger log.Logger) platform.PlatformHTTPClient {
+	conn, err := http.NewClient(
+		context.Background(),
+		http.WithEndpoint(c.IndustrialApi.Addr),
+		http.WithMiddleware(
+			recovery.Recovery(),
+			logging.Client(logger),
+		),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+	client := platform.NewPlatformHTTPClient(conn)
+	return client
+}
 
 func NewCache(c *conf.Data) cache.Cache {
 	size := int64(defaultCacheSize)

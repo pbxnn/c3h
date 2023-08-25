@@ -1,6 +1,8 @@
 package biz
 
-import "github.com/go-kratos/kratos/v2/log"
+import (
+	"github.com/go-kratos/kratos/v2/log"
+)
 
 type ControlNetRepo interface {
 }

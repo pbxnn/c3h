@@ -177,6 +177,18 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.product_net.SwitchReply'
+    /c3h/r401s/all:
+        get:
+            tags:
+                - R401S
+            operationId: R401S_GetAll
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.r401s.R401sWsMessage'
     /c3h/r401s/apc-control:
         get:
             tags:
@@ -509,6 +521,37 @@ components:
             properties:
                 confirmData:
                     type: object
+        api.r401s.R401sWsMessage:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                data:
+                    $ref: '#/components/schemas/api.r401s.R401sWsMessage_Data'
+        api.r401s.R401sWsMessage_Data:
+            type: object
+            properties:
+                ApcVars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
+                OperationVars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
+                ConfoundingVars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
+                StatusVars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
+                ReactorPerformanceVars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.r401s.VarDetail'
         api.r401s.ResetRequest:
             type: object
             properties:

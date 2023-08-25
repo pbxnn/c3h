@@ -1,13 +1,14 @@
 package service
 
 import (
-	"c3h/internal/biz"
-	"c3h/internal/data/dao"
 	"context"
 
-	"github.com/go-kratos/kratos/v2/log"
-
 	pb "c3h/api/r401s"
+	"c3h/internal/biz"
+	"c3h/internal/data/dao"
+	"c3h/third_party/websocket"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 const (
@@ -68,6 +69,7 @@ type R401SService struct {
 
 	logger *log.Helper
 	uc     *biz.R401SUsecase
+	ws     *websocket.Server
 }
 
 func NewR401SService(uc *biz.R401SUsecase, logger log.Logger) *R401SService {
@@ -380,4 +382,8 @@ func (s *R401SService) formatVarDetailList(list []*dao.DataInfo) []*pb.VarDetail
 		res = append(res, varDetail)
 	}
 	return res
+}
+
+func (s *R401SService) GetAll(ctx context.Context, req *pb.R401SGetAllRequest) (*pb.R401SWsMessage, error) {
+	return s.getWsMessage(ctx)
 }

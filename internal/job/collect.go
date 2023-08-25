@@ -5,6 +5,7 @@ import (
 	"c3h/internal/biz"
 	"c3h/internal/conf"
 	"c3h/internal/data/dao"
+	"c3h/internal/service"
 	"context"
 	"time"
 
@@ -23,9 +24,10 @@ type CollectJob struct {
 
 	uc  *biz.CollectUsecase
 	alu *biz.AuditLogUsecase
+	s   *service.R401SService
 }
 
-func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, uc *biz.CollectUsecase, alu *biz.AuditLogUsecase) *CollectJob {
+func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, uc *biz.CollectUsecase, alu *biz.AuditLogUsecase, s *service.R401SService) *CollectJob {
 	sc, ok := bc.Job.Schedule["collect"]
 	if !ok {
 		sc = DefaultCollectSchedule
@@ -36,6 +38,7 @@ func NewCollectJob(bc *conf.Bootstrap, logger log.Logger, uc *biz.CollectUsecase
 		schedule: sc,
 		uc:       uc,
 		alu:      alu,
+		s:        s,
 	}
 }
 
@@ -49,10 +52,15 @@ func (cj *CollectJob) Run() {
 		cj.alu.AddCronRecord(ctx, op, list, err)
 	}()
 
-	err = cj.uc.Run(ctx)
+	list, err = cj.uc.Collect(ctx)
 	if err != nil {
 		cj.logger.Warn("collect job run err:%s", err.Error())
 	}
+
+	cj.logger.Debugf("cron finished")
+
+	//biz.CollectedChan <- ctx
+	cj.s.SendMessage(ctx)
 }
 
 func (cj *CollectJob) initCtx(ctx context.Context) context.Context {

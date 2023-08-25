@@ -26,8 +26,13 @@ message Server {
     string                   addr    = 2;
     google.protobuf.Duration timeout = 3;
   }
-  HTTP http = 1;
-  GRPC grpc = 2;
+  message Websocket {
+    string addr = 1;
+    string path = 2;
+  }
+  HTTP      http      = 1;
+  GRPC      grpc      = 2;
+  Websocket websocket = 3;
 }
 
 message Data {

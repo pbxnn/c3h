@@ -28,6 +28,7 @@ const (
 	R401S_GetConfoundingVars_FullMethodName    = "/api.r401s.R401S/GetConfoundingVars"
 	R401S_GetReactorPerformance_FullMethodName = "/api.r401s.R401S/GetReactorPerformance"
 	R401S_ConfirmReactorPerf_FullMethodName    = "/api.r401s.R401S/ConfirmReactorPerf"
+	R401S_GetAll_FullMethodName                = "/api.r401s.R401S/GetAll"
 )
 
 // R401SClient is the client API for R401S service.
@@ -43,6 +44,7 @@ type R401SClient interface {
 	GetConfoundingVars(ctx context.Context, in *GetConfoundingVarsRequest, opts ...grpc.CallOption) (*VarListReply, error)
 	GetReactorPerformance(ctx context.Context, in *GetReactorPerformanceRequest, opts ...grpc.CallOption) (*VarListReply, error)
 	ConfirmReactorPerf(ctx context.Context, in *ConfirmReactorPerfRequest, opts ...grpc.CallOption) (*VarListReply, error)
+	GetAll(ctx context.Context, in *R401SGetAllRequest, opts ...grpc.CallOption) (*R401SWsMessage, error)
 }
 
 type r401SClient struct {
@@ -134,6 +136,15 @@ func (c *r401SClient) ConfirmReactorPerf(ctx context.Context, in *ConfirmReactor
 	return out, nil
 }
 
+func (c *r401SClient) GetAll(ctx context.Context, in *R401SGetAllRequest, opts ...grpc.CallOption) (*R401SWsMessage, error) {
+	out := new(R401SWsMessage)
+	err := c.cc.Invoke(ctx, R401S_GetAll_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // R401SServer is the server API for R401S service.
 // All implementations must embed UnimplementedR401SServer
 // for forward compatibility
@@ -147,6 +158,7 @@ type R401SServer interface {
 	GetConfoundingVars(context.Context, *GetConfoundingVarsRequest) (*VarListReply, error)
 	GetReactorPerformance(context.Context, *GetReactorPerformanceRequest) (*VarListReply, error)
 	ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error)
+	GetAll(context.Context, *R401SGetAllRequest) (*R401SWsMessage, error)
 	mustEmbedUnimplementedR401SServer()
 }
 
@@ -180,6 +192,9 @@ func (UnimplementedR401SServer) GetReactorPerformance(context.Context, *GetReact
 }
 func (UnimplementedR401SServer) ConfirmReactorPerf(context.Context, *ConfirmReactorPerfRequest) (*VarListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmReactorPerf not implemented")
+}
+func (UnimplementedR401SServer) GetAll(context.Context, *R401SGetAllRequest) (*R401SWsMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
 func (UnimplementedR401SServer) mustEmbedUnimplementedR401SServer() {}
 
@@ -356,6 +371,24 @@ func _R401S_ConfirmReactorPerf_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _R401S_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(R401SGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(R401SServer).GetAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: R401S_GetAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(R401SServer).GetAll(ctx, req.(*R401SGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // R401S_ServiceDesc is the grpc.ServiceDesc for R401S service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -398,6 +431,10 @@ var R401S_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmReactorPerf",
 			Handler:    _R401S_ConfirmReactorPerf_Handler,
+		},
+		{
+			MethodName: "GetAll",
+			Handler:    _R401S_GetAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,6 +8,7 @@ import (
 
 	"c3h/internal/conf"
 	myLog "c3h/pkg/log"
+	"c3h/third_party/websocket"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -40,7 +41,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server, c *cron.Cron) *C3h {
+func newApp(logger log.Logger, hs *http.Server, ws *websocket.Server, c *cron.Cron) *C3h {
 	return &C3h{
 		Cron: c,
 		App: kratos.New(
@@ -51,6 +52,7 @@ func newApp(logger log.Logger, hs *http.Server, c *cron.Cron) *C3h {
 			kratos.Logger(logger),
 			kratos.Server(
 				hs,
+				ws,
 			),
 		),
 	}
@@ -100,7 +102,7 @@ func main() {
 	defer cleanup()
 
 	// start cron job
-	//c3h.Cron.Start()
+	c3h.Cron.Start()
 
 	// start and wait for stop signal
 	if err := c3h.App.Run(); err != nil {

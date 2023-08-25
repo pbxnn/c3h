@@ -4,6 +4,9 @@ server:
   http:
     addr: 0.0.0.0:8000
     timeout: 600s
+  websocket:
+    addr: 0.0.0.0:8001
+    path: "/ws"
 data:
   database:
     driver: mysql
@@ -32,6 +35,6 @@ auth:
     zxn: {}
 job:
   schedule:
-    collect: "*/10 * * * * *"
+    collect: "*/3 * * * * *"
 
 
